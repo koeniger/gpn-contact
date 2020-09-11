@@ -1,0 +1,8 @@
+29.08.2020 
+1. Создание решение (Contact)
+2. Добавление в решение проекта MVC Contact
+3. Добавление в решение проекта DataContext
+4. Создание миграции к базе данных 
+	строка подключения: "Host=localhost;Database=contact_db;Username=user_db;Password=gfer"
+	Add-migration Initial -Context PostgreDbContext / Remove-Migration
+	Update-database  -Context PostgreDbContext

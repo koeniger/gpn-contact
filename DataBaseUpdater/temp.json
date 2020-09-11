@@ -1,0 +1,9 @@
+{
+  "ConnectionStrings": {
+    "ContactDatabase": "Host=localhost;Database=contact_db;Username=user_db;Password=gfer"
+  },
+
+  "ConnectionStrings": {
+    "ContactDatabase": "Host=172.29.7.65;port=5432;Database=gpn_contact;Username=gpn_contact;Password=gpn_contact"
+  }
+}
