@@ -25,12 +25,12 @@ namespace WebApp.Controllers
         /// <summary>
         /// БД
         /// </summary>
-        private readonly ContactContext dbContext;
+        private readonly Orchestrator _orchestrator;
 
 
-        public ProductTypesController(ContactContext context)
+        public ProductTypesController(Orchestrator orchestrator)
         {
-            dbContext = context;
+            _orchestrator = orchestrator;
         }
 
         #region Get
@@ -45,13 +45,13 @@ namespace WebApp.Controllers
         {
             if (id != null)
             {
-                var result = await dbContext.GetProductType((int)id);
+                var result = await _orchestrator.GetProductType((int)id);
 
                 if (result != null) return Ok(result);
             }
             else
             {
-                var result = await dbContext.fdc_products_types.ToListAsync();
+                var result = await _orchestrator.GetAllProductType();
 
                 if (result != null) return Ok(result);
             }
@@ -67,7 +67,7 @@ namespace WebApp.Controllers
         [HttpGet("search/{search}")]
         public async Task<ActionResult<IEnumerable<product_type>>> Get(string search)
         {
-            var result = await dbContext.SearchProductType(search);
+            var result = await _orchestrator.SearchProductType(search);
 
             if (result != null && result.Count() > 0) return Ok(result);
 
@@ -81,12 +81,12 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await dbContext.fdc_products_types.AddAsync(type);
+                var result = await _orchestrator.Add(type);
 
                 if (result != null && result.State == EntityState.Added)
                 {
-                    await dbContext.SaveChangesAsync();
-                    var response = await dbContext.GetProductType(result.Entity.product_type_id);
+                    await _orchestrator.SaveChangesAsync();
+                    var response = await _orchestrator.GetProductType(result.Entity.product_type_id);
                     return Ok(response);
                 }
             }
@@ -103,12 +103,12 @@ namespace WebApp.Controllers
             {
                 type.product_type_id = id;
 
-                var result = dbContext.fdc_products_types.Update(type);
+                var result = _orchestrator.Update(type);
 
                 if (result != null && result.State == EntityState.Modified)
                 {
-                    await dbContext.SaveChangesAsync();
-                    var response = await dbContext.GetProductType(result.Entity.product_type_id);
+                    await _orchestrator.SaveChangesAsync();
+                    var response = await _orchestrator.GetProductType(result.Entity.product_type_id);
                     return Ok(response);
                 }
             }
@@ -120,12 +120,12 @@ namespace WebApp.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var result = await dbContext.GetProductType(id);
+            var result = await _orchestrator.GetProductType(id);
 
             if (result != null)
             {
-                dbContext.fdc_products_types.Remove(result);
-                var response = await dbContext.SaveChangesAsync();
+                _orchestrator.Remove(result);
+                var response = await _orchestrator.SaveChangesAsync();
 
                 return Ok(response);
             }

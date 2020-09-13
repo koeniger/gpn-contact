@@ -17,12 +17,12 @@ namespace WebApp.Controllers
         /// <summary>
         /// БД
         /// </summary>
-        private readonly ContactContext dbContext;
+        private readonly Orchestrator _orchestrator;
 
 
-        public ProductValueController(ContactContext context)
+        public ProductValueController(Orchestrator orchestrator)
         {
-            dbContext = context;
+            _orchestrator = orchestrator;
         }
 
         #region Get
@@ -35,12 +35,12 @@ namespace WebApp.Controllers
         {
             if (product != null)
             {
-                var result = await dbContext.fdc_products_values.Where(t => t.product_id == product).Include(d => d.product).Include(c => c.product_property).ToListAsync();
-                if (result != null && result.Count > 0) return Ok(result);
+                var result = await _orchestrator.GetProductsValuesByProduct((int)product);
+                if (result != null && result.Count() > 0) return Ok(result);
 
                 return NotFound();
             }
-            var all = await dbContext.fdc_products_values.Include(p => p.product).Include(u => u.product_property).ToListAsync();
+            var all = await _orchestrator.GetAllProductsValues();
             if (all != null) return Ok(all);
 
             return NotFound();
@@ -50,10 +50,10 @@ namespace WebApp.Controllers
         /// Формируется справочник по свойствам продукции
         /// </summary>
         [HttpGet("product_property/{id}")]
-        public async Task<ActionResult<IEnumerable<product_value>>> GetProductsDirectory(int id)
+        public async Task<ActionResult<IEnumerable<product_value>>> GetProductsProperty(int id)
         {
-            var result = await dbContext.fdc_products_values.Where(t => t.product_property_id == id).Include(d => d.product).ToListAsync();
-            if (result != null && result.Count > 0) return Ok(result);
+            var result = await _orchestrator.GetProductsValuesByProperty(id);
+            if (result != null && result.Count() > 0) return Ok(result);
 
             return NotFound();
         }
@@ -66,7 +66,7 @@ namespace WebApp.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult> Get(int id)
         {
-            var result = await dbContext.GetProductValue(id);
+            var result = await _orchestrator.GetProductValue(id);
 
             if (result != null) return Ok(result);
 
@@ -86,14 +86,14 @@ namespace WebApp.Controllers
                 string proplem = ConstraintsTest(productValue).Result;
                 if (proplem == "")
                 {
-                    var result = await dbContext.fdc_products_values.AddAsync(productValue);
+                    var result = await _orchestrator.Add(productValue);
 
                     if (result != null && result.State == EntityState.Added)
                     {
                         try
                         {
-                            await dbContext.SaveChangesAsync();
-                            var response = await dbContext.GetProductValue(result.Entity.product_value_id);
+                            await _orchestrator.SaveChangesAsync();
+                            var response = await _orchestrator.GetProductValue(result.Entity.product_value_id);
 
                             return Ok(response);
                         }
@@ -118,25 +118,31 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                productValue.product_property_id = id;
-                string proplem = ConstraintsTest(productValue).Result;
-                if (proplem == "")
+                var value = await _orchestrator.GetProductValue(id);
+
+                if (value != null)
                 {
-                    var result = dbContext.fdc_products_values.Update(productValue);
-
-                    if (result != null && result.State == EntityState.Modified)
+                    productValue.product_property_id = id;
+                    string proplem = ConstraintsTest(productValue).Result;
+                    if (proplem == "")
                     {
-                        await dbContext.SaveChangesAsync();
+                        var result = _orchestrator.Update(productValue);
 
-                        var response = await dbContext.GetProductValue(result.Entity.product_property_id);
+                        if (result != null && result.State == EntityState.Modified)
+                        {
+                            await _orchestrator.SaveChangesAsync();
 
-                        return Ok(response);
+                            var response = await _orchestrator.GetProductValue(result.Entity.product_property_id);
+
+                            return Ok(response);
+                        }
+                        return NotFound("Свойства продукта не найден");
                     }
-                    return NotFound("Свойства продукта не найден");
+                    return NotFound($"{proplem}");
                 }
                 else
                 {
-                    return NotFound($"{proplem}");
+                    return NotFound($"Значение продукта {id} не найден");
                 }
             }
             return BadRequest();
@@ -147,13 +153,13 @@ namespace WebApp.Controllers
         /// </summary>
         private async Task<string> ConstraintsTest(product_value productValue)
         {
-            var product_type = await dbContext.GetProduct(productValue.product_property_id);
+            var product_property = await _orchestrator.GetProductsProperties(productValue.product_property_id);
 
-            var product = await dbContext.GetProduct(productValue.product_id);
+            var product = await _orchestrator.GetProduct(productValue.product_id);
 
             string proplem = string.Format("{0}{1}"
                         , product == null ? "Не указан продукт. " : ""
-                        , product_type == null ? "Не указан тип продукта. " : "");
+                        , product_property == null ? "Не указаны свойства продукта. " : "");
             return proplem;
         }
         #endregion
@@ -163,12 +169,12 @@ namespace WebApp.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var result = await dbContext.GetProductValue(id);
+            var result = await _orchestrator.GetProductValue(id);
 
             if (result != null)
             {
-                dbContext.fdc_products_values.Remove(result);
-                var response = await dbContext.SaveChangesAsync();
+                _orchestrator.Remove(result);
+                var response = await _orchestrator.SaveChangesAsync();
 
                 return Ok(response);
             }

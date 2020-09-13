@@ -1,6 +1,6 @@
 using Models.secr;
 
-namespace WebApp.Models
+namespace WebApp.dto
 {
     public class AuthenticateResponse
     {

@@ -7,8 +7,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
-using WebApp.Models;
 using WebApp.Helpers;
+using WebApp.dto;
 
 namespace WebApp.Services
 {

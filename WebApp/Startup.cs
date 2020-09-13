@@ -1,3 +1,4 @@
+using DataContext;
 using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
 using JavaScriptEngineSwitcher.V8;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -11,7 +12,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using React.AspNet;
-using System.Collections.Generic;
 using System.Text;
 using WebApp.Helpers;
 using WebApp.Models;
@@ -76,10 +76,12 @@ namespace WebApp
 
             #endregion
 
-        #region подключение DataContext
+            #region подключение DataContext
+
+            services.AddScoped<Orchestrator>();
 
             services.AddDbContext<ContactContext>(options =>
-            options.UseNpgsql(Configuration.GetConnectionString("ContactDatabase"), b => b.MigrationsAssembly("Contact")));
+            options.UseNpgsql(Configuration.GetConnectionString("ContactDatabase")));
             #endregion
 
             #region Authorization

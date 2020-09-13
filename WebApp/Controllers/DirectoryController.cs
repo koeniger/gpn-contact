@@ -15,12 +15,12 @@ namespace WebApp.Controllers
         /// <summary>
         /// БД
         /// </summary>
-        private readonly ContactContext dbContext;
+        private readonly Orchestrator _orchestrator;
 
 
-        public DirectoryController(ContactContext context)
+        public DirectoryController(Orchestrator orchestrator)
         {
-            dbContext = context;
+            _orchestrator = orchestrator;
         }
 
         #region GET
@@ -30,7 +30,7 @@ namespace WebApp.Controllers
         [HttpGet]
         public async Task<ActionResult> Get()
         {
-            var result = await dbContext.GetDirectories();
+            var result = await _orchestrator.GetDirectories();
 
             if (result != null) return Ok(result);
 
@@ -45,7 +45,7 @@ namespace WebApp.Controllers
         {
             if (id != null)
             {
-                var result = await dbContext.GetDirectory((int)id);
+                var result = await _orchestrator.GetDirectory((int)id);
 
                 if (result != null) return Ok(result);
 
@@ -71,12 +71,12 @@ namespace WebApp.Controllers
                 if (problem != null)
                 {
 
-                    var result = await dbContext.fdc_product_directories.AddAsync(new_directory);
+                    var result = await _orchestrator.Add(new_directory);
 
                     if (result != null && result.State == EntityState.Added)
                     {
-                        await dbContext.SaveChangesAsync();
-                        var response = await dbContext.GetDirectory(result.Entity.product_directory_id);
+                        await _orchestrator.SaveChangesAsync();
+                        var response = await _orchestrator.GetDirectory(result.Entity.product_directory_id);
                         return Ok(response);
                     }
                     return NotFound();
@@ -103,12 +103,12 @@ namespace WebApp.Controllers
 
                 if (problem != null)
                 {
-                    var result = dbContext.fdc_product_directories.Update(directory);
+                    var result = _orchestrator.Update(directory);
 
                     if (result != null && result.State == EntityState.Modified)
                     {
-                        await dbContext.SaveChangesAsync();
-                        var response = await dbContext.GetDirectory(result.Entity.product_directory_id);
+                        await _orchestrator.SaveChangesAsync();
+                        var response = await _orchestrator.GetDirectory(result.Entity.product_directory_id);
                         return Ok(response);
                     }
                     return NotFound();
@@ -130,7 +130,7 @@ namespace WebApp.Controllers
             }
             else
             {
-                directory.parent = await dbContext.GetDirectory(directory.parent_id);
+                directory.parent = await _orchestrator.GetDirectory(directory.parent_id);
                 if (directory.parent == null) return "Не найден родительский раздел";
             }
 
@@ -146,12 +146,12 @@ namespace WebApp.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteAsync(int id)
         {
-            var result = await dbContext.GetDirectory(id);
+            var result = await _orchestrator.GetDirectory(id);
 
             if (result != null)
             {
-                dbContext.fdc_product_directories.Remove(result);
-                var response = await dbContext.SaveChangesAsync();
+                _orchestrator.Remove(result);
+                var response = await _orchestrator.SaveChangesAsync();
 
                 return Ok(id);
             }

@@ -17,12 +17,12 @@ namespace WebApp.Controllers
         /// <summary>
         /// БД
         /// </summary>
-        private readonly ContactContext dbContext;
+        private readonly Orchestrator _orchestrator;
 
 
-        public OKEIController(ContactContext context)
+        public OKEIController(Orchestrator orchestrator)
         {
-            dbContext = context;
+            _orchestrator = orchestrator;
         }
         #region Get
         /// <summary>
@@ -35,11 +35,11 @@ namespace WebApp.Controllers
         {
             if (id != null)
             {
-                var result = await dbContext.GetOKEI((int)id);
+                var result = await _orchestrator.GetOKEI((int)id);
 
                 if (result != null) return Ok(result);
             }
-            var all = await dbContext.fdc_okei.ToListAsync();
+            var all = await _orchestrator.GetAllOKEI();
             if (all != null) return Ok(all);
 
             return NotFound();
@@ -55,7 +55,7 @@ namespace WebApp.Controllers
         {
             search = search.ToLower();
 
-            var result = await dbContext.SearchOKEI(search);
+            var result = await _orchestrator.SearchOKEI(search);
 
             if (result != null && result.Count() > 0) return Ok(result);
 
@@ -70,14 +70,14 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await dbContext.fdc_okei.AddAsync(okei);
+                var result = await _orchestrator.Add(okei);
 
                 if (result != null && result.State == EntityState.Added)
                 {
                     try
                     {
-                        await dbContext.SaveChangesAsync();
-                        var response = await dbContext.GetOKEI(result.Entity.okei_id);
+                        await _orchestrator.SaveChangesAsync();
+                        var response = await _orchestrator.GetOKEI(result.Entity.okei_id);
 
                         return Ok(response);
                     }
@@ -101,13 +101,13 @@ namespace WebApp.Controllers
             {
                 okei.okei_id = id;
 
-                var result = dbContext.fdc_okei.Update(okei);
+                var result = _orchestrator.Update(okei);
 
                 if (result != null && result.State == EntityState.Modified)
                 {
-                    await dbContext.SaveChangesAsync();
+                    await _orchestrator.SaveChangesAsync();
 
-                    var response = await dbContext.GetOKEI(result.Entity.okei_id);
+                    var response = await _orchestrator.GetOKEI(result.Entity.okei_id);
 
                     return Ok(response);
                 }
@@ -124,12 +124,12 @@ namespace WebApp.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var result = await dbContext.GetOKEI(id);
+            var result = await _orchestrator.GetOKEI(id);
 
             if (result != null)
             {
-                dbContext.fdc_okei.Remove(result);
-                var response = await dbContext.SaveChangesAsync();
+                _orchestrator.Remove(result);
+                var response = await _orchestrator.SaveChangesAsync();
 
                 return Ok(response);
             }

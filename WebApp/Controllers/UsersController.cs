@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using WebApp.Models;
+using WebApp.dto;
 using WebApp.Services;
 
 namespace WebApp.Controllers

@@ -25,12 +25,12 @@ namespace WebApp.Controllers
         /// <summary>
         /// БД
         /// </summary>
-        private readonly ContactContext dbContext;
+        private readonly Orchestrator _orchestrator;
 
 
-        public ProductsController(ContactContext context)
+        public ProductsController(Orchestrator orchestrator)
         {
-            dbContext = context;
+            _orchestrator = orchestrator;
         }
 
         #region Get
@@ -43,12 +43,12 @@ namespace WebApp.Controllers
         {
             if (product_type != null)
             {
-                var result = await dbContext.fdc_products.Where(t => t.product_type_id == product_type).Include(d => d.product_directory).ThenInclude(p => p.parent).Include(c => c.contractor).Include(t => t.product_type).ToListAsync();
-                if (result != null && result.Count > 0) return Ok(result);
+                var result = await _orchestrator.GetProductsProductsTypes(product_type);
+                if (result != null && result.Count() > 0) return Ok(result);
 
                 return NotFound();
             }
-            var all = await dbContext.fdc_products.Include(u => u.product_type).ToListAsync();
+            var all = await _orchestrator.GetAllProducts();
             if (all != null) return Ok(all);
 
             return NotFound();
@@ -60,8 +60,8 @@ namespace WebApp.Controllers
         [HttpGet("product_directory/{id}")]
         public async Task<ActionResult<IEnumerable<product>>> GetProductsDirectory(int id)
         {
-            var result = await dbContext.fdc_products.Where(t => t.product_directory_id == id).Include(d => d.product_directory).ThenInclude(p=>p.parent).Include(c=>c.contractor).Include(t=>t.product_type).ToListAsync();
-            if (result != null && result.Count > 0) return Ok(result);
+            var result = await _orchestrator.GetProductsDirectory(id);
+            if (result != null && result.Count() > 0) return Ok(result);
 
             return NotFound();
         }
@@ -72,8 +72,8 @@ namespace WebApp.Controllers
         [HttpGet("contractor/{id}")]
         public async Task<ActionResult<IEnumerable<product>>> GetProductsContractor(int id)
         {
-            var result = await dbContext.fdc_products.Where(t => t.contractor_id == id).Include(d => d.product_directory).ThenInclude(p => p.parent).Include(c => c.contractor).Include(t => t.product_type).ToListAsync();
-            if (result != null && result.Count > 0) return Ok(result);
+            var result = await _orchestrator.GetProductsContractor(id);
+            if (result != null && result.Count() > 0) return Ok(result);
 
             return NotFound();
         }
@@ -86,7 +86,7 @@ namespace WebApp.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult> Get(int id)
         {
-            var result = await dbContext.GetProduct(id);
+            var result = await _orchestrator.GetProduct(id);
 
             if (result != null) return Ok(result);
 
@@ -103,7 +103,7 @@ namespace WebApp.Controllers
         {
             search = search.ToLower();
 
-            var result = await dbContext.SearchProduct(search);
+            var result = await _orchestrator.SearchProduct(search);
 
             if (result != null && result.Count() > 0) return Ok(result);
 
@@ -125,14 +125,14 @@ namespace WebApp.Controllers
                 string proplem = ConstraintsTest(product).Result;
                 if (proplem == "")
                 {
-                    var result = await dbContext.fdc_products.AddAsync(product);
+                    var result = await _orchestrator.Add(product);
 
                     if (result != null && result.State == EntityState.Added)
                     {
                         try
                         {
-                            await dbContext.SaveChangesAsync();
-                            var response = await dbContext.GetProduct(result.Entity.product_id);
+                            await _orchestrator.SaveChangesAsync();
+                            var response = await _orchestrator.GetProduct(result.Entity.product_id);
 
                             return Ok(response);
                         }
@@ -154,9 +154,9 @@ namespace WebApp.Controllers
         /// </summary>
         private async Task<string> ConstraintsTest(product product)
         {
-            var productType = await dbContext.GetProductType(product.product_type_id);
-            var productDirectory = await dbContext.GetDirectory(product.product_directory_id);
-            var contractor = await dbContext.GetContractor(product.contractor_id);
+            var productType = await _orchestrator.GetProductType(product.product_type_id);
+            var productDirectory = await _orchestrator.GetDirectory(product.product_directory_id);
+            var contractor = await _orchestrator.GetContractor(product.contractor_id);
 
             string proplem = string.Format("{0}{1}{2}"
                             , productType == null ? "Тип продукции не существует. " : ""
@@ -183,26 +183,35 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                product.product_id = id;
+                var p = await _orchestrator.GetProduct(id);
 
-                string proplem = ConstraintsTest(product).Result;
-                if (proplem == "")
+                if (p != null)
                 {
-                    var result = dbContext.fdc_products.Update(product);
+                    product.product_id = id;
 
-                    if (result != null && result.State == EntityState.Modified)
+                    string proplem = ConstraintsTest(product).Result;
+                    if (proplem == "")
                     {
-                        await dbContext.SaveChangesAsync();
+                        var result = _orchestrator.Update(product);
 
-                        var response = await dbContext.GetProduct(result.Entity.product_id);
+                        if (result != null && result.State == EntityState.Modified)
+                        {
+                            await _orchestrator.SaveChangesAsync();
+
+                            var response = await _orchestrator.GetProduct(result.Entity.product_id);
                         
-                        return Ok(response);
+                            return Ok(response);
+                        }
+                        return NotFound($"{result.State}");
                     }
-                    return NotFound($"{result.State}");
+                    else
+                    {
+                        return NotFound($"{proplem}");
+                    }
                 }
                 else
                 {
-                    return NotFound($"{proplem}");
+                    return NotFound($"Продукт {id} не найден");
                 }
             }
             return BadRequest();
@@ -218,12 +227,12 @@ namespace WebApp.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var result = await dbContext.GetProduct(id);
+            var result = await _orchestrator.GetProduct(id);
 
             if (result != null)
             {
-                dbContext.fdc_products.Remove(result);
-                var response = await dbContext.SaveChangesAsync();
+                _orchestrator.Remove(result);
+                var response = await _orchestrator.SaveChangesAsync();
 
                 return Ok(response);
             }

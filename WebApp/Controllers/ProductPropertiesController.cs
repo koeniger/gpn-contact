@@ -17,12 +17,12 @@ namespace WebApp.Controllers
         /// <summary>
         /// БД
         /// </summary>
-        private readonly ContactContext dbContext;
+        private readonly Orchestrator _orchestrator;
 
 
-        public ProductPropertiesController(ContactContext context)
+        public ProductPropertiesController(Orchestrator orchestrator)
         {
-            dbContext = context;
+            _orchestrator = orchestrator;
         }
 
         #region GET
@@ -32,14 +32,14 @@ namespace WebApp.Controllers
         {
             if (id != null)
             {
-                var result = await dbContext.GetProductsProperties((int)id);
+                var result = await _orchestrator.GetProductsProperties((int)id);
 
                 if (result != null) return Ok(result);
             }
             else
             {
-                var products_types = await dbContext.fdc_products_properties.ToListAsync();
-                if (products_types != null && products_types.Count > 0) return Ok(products_types);
+                var productsProperties = await _orchestrator.GetAllProductsProperties();
+                if (productsProperties != null && productsProperties.Count() > 0) return Ok(productsProperties);
             }
 
             return NotFound();
@@ -55,7 +55,7 @@ namespace WebApp.Controllers
         {
             search = search.ToLower();
 
-            var result = await dbContext.SearchProductProperty(search);
+            var result = await _orchestrator.SearchProductProperty(search);
 
             if (result != null && result.Count() > 0) return Ok(result);
 
@@ -73,14 +73,14 @@ namespace WebApp.Controllers
                 string proplem = ConstraintsTest(productProperty).Result;
                 if (proplem == "")
                 {
-                    var result = await dbContext.fdc_products_properties.AddAsync(productProperty);
+                    var result = await _orchestrator.Add(productProperty);
 
                     if (result != null && result.State == EntityState.Added)
                     {
                         try
                         {
-                            await dbContext.SaveChangesAsync();
-                            var response = await dbContext.GetProductsProperties(result.Entity.product_property_id);
+                            await _orchestrator.SaveChangesAsync();
+                            var response = await _orchestrator.GetProductsProperties(result.Entity.product_property_id);
 
                             return Ok(response);
                         }
@@ -105,25 +105,34 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                productProperty.product_property_id = id;
-                string proplem = ConstraintsTest(productProperty).Result;
-                if (proplem == "")
+                var p = await _orchestrator.GetProductsProperties(id);
+
+                if (p != null)
                 {
-                    var result = dbContext.fdc_products_properties.Update(productProperty);
-
-                    if (result != null && result.State == EntityState.Modified)
+                    productProperty.product_property_id = id;
+                    string proplem = ConstraintsTest(productProperty).Result;
+                    if (proplem == "")
                     {
-                        await dbContext.SaveChangesAsync();
+                        var result = _orchestrator.Update(productProperty);
 
-                        var response = await dbContext.GetProductsProperties(result.Entity.product_property_id);
+                        if (result != null && result.State == EntityState.Modified)
+                        {
+                            await _orchestrator.SaveChangesAsync();
 
-                        return Ok(response);
+                            var response = await _orchestrator.GetProductsProperties(result.Entity.product_property_id);
+
+                            return Ok(response);
+                        }
+                        return NotFound("Свойства продукта не найдены");
                     }
-                    return NotFound("Свойства продукта не найден");
+                    else
+                    {
+                        return NotFound($"{proplem}");
+                    }
                 }
                 else
                 {
-                    return NotFound($"{proplem}");
+                    return NotFound($"Свойство продукта {id} не найдено");
                 }
             }
             return BadRequest();
@@ -134,13 +143,19 @@ namespace WebApp.Controllers
         /// </summary>
         private async Task<string> ConstraintsTest(product_property productProperty)
         {
-            var product_type = await dbContext.GetProductType(productProperty.product_type_id);
+            var product_type = await _orchestrator.GetProductType(productProperty.product_type_id);
 
-            var okei = await dbContext.GetOKEI(productProperty.okei_id);
+            var okei = await _orchestrator.GetOKEI(productProperty.okei_id);
 
             string proplem = string.Format("{0}{1}"
                         , product_type == null ? "Не указан тип продукта. " : ""
                         , okei == null ? "Не указаны Единицы измерения " : "");
+
+            if (proplem == "")
+            {
+                productProperty.product_type = product_type;
+                productProperty.okei = okei;
+            }
             return proplem;
         }
         #endregion
@@ -150,12 +165,12 @@ namespace WebApp.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var result = await dbContext.GetProductsProperties(id);
+            var result = await _orchestrator.GetProductsProperties(id);
 
             if (result != null)
             {
-                dbContext.fdc_products_properties.Remove(result);
-                var response = await dbContext.SaveChangesAsync();
+                _orchestrator.Remove(result);
+                var response = await _orchestrator.SaveChangesAsync();
 
                 return Ok(response);
             }
