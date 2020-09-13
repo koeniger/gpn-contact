@@ -3,7 +3,7 @@
         return React.createElement(
             'div',
             { className: 'commentBox' },
-            <h1>Welcome to Contact!</h1>,
+            <h1>Welcome to ГПН Contact!</h1>,
         );
     }
 }
