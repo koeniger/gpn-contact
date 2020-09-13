@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Models", "Models\Models.csp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ModelsOld", "ModelsStart\ModelsOld.csproj", "{2A286606-FD8A-4069-A0BD-5238DB1F0530}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Authentication", "Authentication\Authentication.csproj", "{A9F9BCAE-0038-4507-AA06-D92FBB399663}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{2A286606-FD8A-4069-A0BD-5238DB1F0530}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A286606-FD8A-4069-A0BD-5238DB1F0530}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A286606-FD8A-4069-A0BD-5238DB1F0530}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9F9BCAE-0038-4507-AA06-D92FBB399663}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9F9BCAE-0038-4507-AA06-D92FBB399663}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9F9BCAE-0038-4507-AA06-D92FBB399663}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9F9BCAE-0038-4507-AA06-D92FBB399663}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
