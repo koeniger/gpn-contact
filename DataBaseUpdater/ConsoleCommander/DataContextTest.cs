@@ -3,13 +3,14 @@
 //#define User
 //#define OKEI
 //#define ProductDirectory
-//#define ProductType
-//#define ProductProperty
-//#define Product
-//#define ProductValue
-//#define ProductQuestion
-//#define ProductRate
-//#define ProductResponse
+#define ProductPropertyType
+#define ProductType
+#define ProductProperty
+#define Product
+#define ProductValue
+#define ProductQuestion
+#define ProductRate
+#define ProductResponse
 #define ContractorRate
 #define ContractorResponse
 
@@ -270,26 +271,26 @@ namespace DataBaseUpdater.ConsoleCommander
                     new okei()
                     {
                         okei_id = 0,
-                        name_short = "°",
-                        name_full = "Температура, градус Цельсия"
+                        symbol_ru = "°",
+                        okei_name = "Температура, градус Цельсия"
                     },
                     new okei()
                     {
                         okei_id = 0,
-                        name_short = "т",
-                        name_full = "Вес, тонна"
+                        symbol_ru = "т",
+                        okei_name = "тонна"
                     },
                     new okei()
                     {
                         okei_id = 0,
-                        name_short = "м³",
-                        name_full = "Объем, метры кубические"
+                        symbol_ru = "м³",
+                        okei_name = "метры кубические"
                     },
                     new okei()
                     {
                         okei_id = 0,
-                        name_short = "шт.",
-                        name_full = "Количество, штук"
+                        symbol_ru = "шт.",
+                        okei_name = "штук"
                     }
                 };
 
@@ -394,6 +395,45 @@ namespace DataBaseUpdater.ConsoleCommander
 #endif
             #endregion
 
+            #region ProductPropertyType
+#if ProductPropertyType
+#endif
+            #endregion
+            try
+            {
+                var productPropertyType = new List<product_property_type>()
+                {
+                    new product_property_type()
+                    {
+                        product_property_type_id = "AAA",
+                        property_type_name = "Антисептик",
+                    },
+                    new product_property_type()
+                    {
+                        product_property_type_id = "AAB",
+                        property_type_name = "Программное обеспечение",
+                    },
+                    new product_property_type()
+                    {
+                        product_property_type_id = "AAC",
+                        property_type_name = "Измерительная техника",
+                    },
+                };
+
+                context.fdc_products_properties_types.AddRange(productPropertyType);
+                try
+                {
+                    context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
             #region ProductType
 #if ProductType
             try
@@ -447,13 +487,18 @@ namespace DataBaseUpdater.ConsoleCommander
 #if ProductProperty
             try
             {
-                var weight = context.fdc_okei.FirstOrDefault(i => i.name_full == "Вес, тонна");
-                var tank = context.fdc_okei.FirstOrDefault(i => i.name_full == "Объем, метры кубические");
-                var amount = context.fdc_okei.FirstOrDefault(i => i.name_full == "Количество, штук");
+                var weight = context.fdc_okei.FirstOrDefault(i => i.okei_name == "тонна");
+                var tank = context.fdc_okei.FirstOrDefault(i => i.okei_name == "метры кубические");
+                var amount = context.fdc_okei.FirstOrDefault(i => i.okei_name == "штук");
 
                 var chem = context.fdc_products_types.FirstOrDefault(i => i.product_type_name == "Химия");
                 var soft = context.fdc_products_types.FirstOrDefault(i => i.product_type_name == "Программное обеспечение");
                 var equip = context.fdc_products_types.FirstOrDefault(i => i.product_type_name == "Оборудование");
+
+                var chemPropType = context.fdc_products_properties_types.FirstOrDefault(i => i.property_type_name == "Антисептик");
+                var softPropType = context.fdc_products_properties_types.FirstOrDefault(i => i.property_type_name == "Программное обеспечение");
+                var equipPropType = context.fdc_products_properties_types.FirstOrDefault(i => i.property_type_name == "Измерительная техника");
+
 
                 var productProperty = new List<product_property>()
                 {
@@ -461,7 +506,8 @@ namespace DataBaseUpdater.ConsoleCommander
                     {
                         product_property_id = 0,
                         property_name = "Антисептики",
-                        value_type = "Объем",
+                        product_property_type_id = chemPropType.product_property_type_id,
+                        product_property_type = chemPropType,
                         okei_id = tank.okei_id,
                         okei = tank,
                         product_type_id = chem.product_type_id,
@@ -471,7 +517,8 @@ namespace DataBaseUpdater.ConsoleCommander
                     {
                         product_property_id = 0,
                         property_name = "для Windows",
-                        value_type = "шт.",
+                        product_property_type_id = softPropType.product_property_type_id,
+                        product_property_type = softPropType,
                         okei_id = amount.okei_id,
                         okei = amount,
                         product_type_id = soft.product_type_id,
@@ -481,7 +528,8 @@ namespace DataBaseUpdater.ConsoleCommander
                     {
                         product_property_id = 0,
                         property_name = "Весовое оборудование",
-                        value_type = "шт.",
+                        product_property_type_id = equipPropType.product_property_type_id,
+                        product_property_type = equipPropType,
                         okei_id = weight.okei_id,
                         okei = weight,
                         product_type_id = equip.product_type_id,
@@ -613,7 +661,8 @@ namespace DataBaseUpdater.ConsoleCommander
                     new product_value()
                     {
                         product_value_id = 0,
-                        value = "Бочка",
+                        product_value_min = "1",
+                        product_value_max = "1",
                         product_id = chem.product_id,
                         product = chem,
                         product_property_id = chemProperty.product_property_id,
@@ -622,7 +671,8 @@ namespace DataBaseUpdater.ConsoleCommander
                     new product_value()
                     {
                         product_value_id = 0,
-                        value = "Диск",
+                        product_value_min = "1",
+                        product_value_max = "1",
                         product_id = soft.product_id,
                         product = soft,
                         product_property_id = softProperty.product_property_id,
@@ -631,7 +681,8 @@ namespace DataBaseUpdater.ConsoleCommander
                     new product_value()
                     {
                         product_value_id = 0,
-                        value = "Весы",
+                        product_value_min = "10",
+                        product_value_max = "1000",
                         product_id = weight.product_id,
                         product = weight,
                         product_property_id = equipProperty.product_property_id,

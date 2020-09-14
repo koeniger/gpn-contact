@@ -170,8 +170,8 @@ namespace WebApp.Models
 
         public async Task<IEnumerable<okei>> GetAllOKEI() => await _context.fdc_okei.ToListAsync();
         public async Task<IEnumerable<okei>> SearchOKEI(string search) => await _context.fdc_okei.Where(
-                t => t.name_full.ToLower().Contains(search) 
-                || t.name_short.ToLower().Contains(search)).ToListAsync();
+                t => t.okei_name.ToLower().Contains(search) 
+                || t.symbol_ru.ToLower().Contains(search)).ToListAsync();
 
         public async Task<EntityEntry<okei>> Add(okei new_okei) => await _context.fdc_okei.AddAsync(new_okei);
 

@@ -33,6 +33,11 @@ namespace DataContext
         /// <summary>
         /// Справочник типов продукции
         /// </summary>
+        public DbSet<product_property_type> fdc_products_properties_types { get; set; }
+
+        /// <summary>
+        /// Справочник типов продукции
+        /// </summary>
         public DbSet<product_type> fdc_products_types { get; set; }
 
         #region rate

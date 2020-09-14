@@ -16,13 +16,33 @@ namespace Models.gpn
         public int okei_id { get; set; }
 
         /// <summary>
-        /// Наимменование сокращенное
+        /// Код справочника ОКЕИ
         /// </summary>
-        public string name_short { get; set; }
+        public int okei_code { get; set; }
 
         /// <summary>
-        /// Наимменование полное
+        /// Название единиц измерения
         /// </summary>
-        public string name_full { get; set; }
+        public string okei_name { get; set; }
+
+        /// <summary>
+        /// Национальное условное обозначение
+        /// </summary>
+        public string symbol_ru { get; set; }
+
+        /// <summary>
+        /// Междунаролное условное обозначение
+        /// </summary>
+        public string symbol_all { get; set; }
+
+        /// <summary>
+        /// Национальное кодовое обозначение
+        /// </summary>
+        public string symbol_ru_code { get; set; }
+
+        /// <summary>
+        /// Междунаролное кодовое обозначение
+        /// </summary>
+        public string symbol_all_code { get; set; }
     }
 }

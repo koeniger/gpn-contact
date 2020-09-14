@@ -45,8 +45,12 @@ namespace DataBaseUpdater.Migrations
                 {
                     okei_id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name_short = table.Column<string>(nullable: true),
-                    name_full = table.Column<string>(nullable: true)
+                    okei_code = table.Column<int>(nullable: false),
+                    okei_name = table.Column<string>(nullable: true),
+                    symbol_ru = table.Column<string>(nullable: true),
+                    symbol_all = table.Column<string>(nullable: true),
+                    symbol_ru_code = table.Column<string>(nullable: true),
+                    symbol_all_code = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -72,6 +76,18 @@ namespace DataBaseUpdater.Migrations
                         principalTable: "fdc_product_directories",
                         principalColumn: "product_directory_id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "fdc_products_properties_types",
+                columns: table => new
+                {
+                    product_property_type_id = table.Column<string>(nullable: false),
+                    property_type_name = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_fdc_products_properties_types", x => x.product_property_type_id);
                 });
 
             migrationBuilder.CreateTable(
@@ -151,8 +167,8 @@ namespace DataBaseUpdater.Migrations
                     product_property_id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     property_name = table.Column<string>(nullable: true),
-                    value_type = table.Column<string>(nullable: true),
                     product_type_id = table.Column<int>(nullable: false),
+                    product_property_type_id = table.Column<string>(nullable: true),
                     okei_id = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
@@ -164,6 +180,12 @@ namespace DataBaseUpdater.Migrations
                         principalTable: "fdc_okei",
                         principalColumn: "okei_id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_fdc_products_properties_fdc_products_properties_types_produ~",
+                        column: x => x.product_property_type_id,
+                        principalTable: "fdc_products_properties_types",
+                        principalColumn: "product_property_type_id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_fdc_products_properties_fdc_products_types_product_type_id",
                         column: x => x.product_type_id,
@@ -209,7 +231,8 @@ namespace DataBaseUpdater.Migrations
                 {
                     product_value_id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    property_value = table.Column<string>(nullable: true),
+                    product_value_min = table.Column<string>(nullable: true),
+                    product_value_max = table.Column<string>(nullable: true),
                     product_id = table.Column<int>(nullable: false),
                     product_property_id = table.Column<int>(nullable: false)
                 },
@@ -442,6 +465,11 @@ namespace DataBaseUpdater.Migrations
                 column: "okei_id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_fdc_products_properties_product_property_type_id",
+                table: "fdc_products_properties",
+                column: "product_property_type_id");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_fdc_products_properties_product_type_id",
                 table: "fdc_products_properties",
                 column: "product_type_id");
@@ -550,6 +578,9 @@ namespace DataBaseUpdater.Migrations
 
             migrationBuilder.DropTable(
                 name: "fdc_okei");
+
+            migrationBuilder.DropTable(
+                name: "fdc_products_properties_types");
 
             migrationBuilder.DropTable(
                 name: "fdc_products_types");

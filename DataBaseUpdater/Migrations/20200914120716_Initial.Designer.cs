@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataBaseUpdater.Migrations
 {
     [DbContext(typeof(PostgreDbContext))]
-    [Migration("20200914032709_Initial")]
+    [Migration("20200914120716_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -134,10 +134,22 @@ namespace DataBaseUpdater.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("name_full")
+                    b.Property<int>("okei_code")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("okei_name")
                         .HasColumnType("text");
 
-                    b.Property<string>("name_short")
+                    b.Property<string>("symbol_all")
+                        .HasColumnType("text");
+
+                    b.Property<string>("symbol_all_code")
+                        .HasColumnType("text");
+
+                    b.Property<string>("symbol_ru")
+                        .HasColumnType("text");
+
+                    b.Property<string>("symbol_ru_code")
                         .HasColumnType("text");
 
                     b.HasKey("okei_id");
@@ -226,22 +238,37 @@ namespace DataBaseUpdater.Migrations
                     b.Property<int>("okei_id")
                         .HasColumnType("integer");
 
+                    b.Property<string>("product_property_type_id")
+                        .HasColumnType("text");
+
                     b.Property<int>("product_type_id")
                         .HasColumnType("integer");
 
                     b.Property<string>("property_name")
                         .HasColumnType("text");
 
-                    b.Property<string>("value_type")
-                        .HasColumnType("text");
-
                     b.HasKey("product_property_id");
 
                     b.HasIndex("okei_id");
 
+                    b.HasIndex("product_property_type_id");
+
                     b.HasIndex("product_type_id");
 
                     b.ToTable("fdc_products_properties");
+                });
+
+            modelBuilder.Entity("Models.gpn.product_property_type", b =>
+                {
+                    b.Property<string>("product_property_type_id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("property_type_name")
+                        .HasColumnType("text");
+
+                    b.HasKey("product_property_type_id");
+
+                    b.ToTable("fdc_products_properties_types");
                 });
 
             modelBuilder.Entity("Models.gpn.product_question", b =>
@@ -375,8 +402,10 @@ namespace DataBaseUpdater.Migrations
                     b.Property<int>("product_property_id")
                         .HasColumnType("integer");
 
-                    b.Property<string>("value")
-                        .HasColumnName("property_value")
+                    b.Property<string>("product_value_max")
+                        .HasColumnType("text");
+
+                    b.Property<string>("product_value_min")
                         .HasColumnType("text");
 
                     b.HasKey("product_value_id");
@@ -498,6 +527,10 @@ namespace DataBaseUpdater.Migrations
                         .HasForeignKey("okei_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Models.gpn.product_property_type", "product_property_type")
+                        .WithMany()
+                        .HasForeignKey("product_property_type_id");
 
                     b.HasOne("Models.gpn.product_type", "product_type")
                         .WithMany("ProductProperties")

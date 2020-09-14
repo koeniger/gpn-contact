@@ -18,8 +18,15 @@ namespace Models.gpn
         [Key]
         public int product_value_id { get; set; }
 
-        [Column("property_value")]
-        public string value { get; set; }
+        /// <summary>
+        /// Значения свойства минимальное
+        /// </summary>
+        public string product_value_min { get; set; }
+
+        /// <summary>
+        /// Значения свойства максимальное
+        /// </summary>
+        public string product_value_max { get; set; }
 
 
         #region CONSTRAINT

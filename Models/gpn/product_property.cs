@@ -20,11 +20,6 @@ namespace Models.gpn
         /// </summary>
         public string property_name { get; set; }
 
-        /// <summary>
-        /// Строка/целое/дробь
-        /// </summary>
-        public string value_type { get; set; }
-
 
         #region CONSTRAINT
         /// <summary>
@@ -34,6 +29,14 @@ namespace Models.gpn
         public int product_type_id { get; set; }
 
         public product_type product_type { get; set; }
+
+        /// <summary>
+        /// Код типа характеристики
+        /// </summary>
+        [ForeignKey("product_property_type")]
+        public string product_property_type_id { get; set; }
+
+        public product_property_type product_property_type { get; set; }
 
         /// <summary>
         /// Код единицы измерения
