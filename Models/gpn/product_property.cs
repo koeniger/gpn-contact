@@ -30,7 +30,7 @@ namespace Models.gpn
         /// <summary>
         /// Код продукции
         /// </summary>
-        [ForeignKey("product")]
+        [ForeignKey("product_type")]
         public int product_type_id { get; set; }
 
         public product_type product_type { get; set; }

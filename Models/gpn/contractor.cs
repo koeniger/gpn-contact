@@ -32,5 +32,11 @@ namespace Models.gpn
 
         [JsonIgnore]
         public ICollection<product> Products { get; set; }
+
+        [JsonIgnore]
+        public ICollection<contractor_response> Responses { get; set; }
+
+        [JsonIgnore]
+        public ICollection<contractor_rate> Rates { get; set; }
     }
 }

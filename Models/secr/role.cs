@@ -15,12 +15,12 @@ namespace Models.secr
         /// <summary>
         /// Наименование роли
         /// </summary>
-        string role_name { get; set; }
+        public string role_name { get; set; }
 
         /// <summary>
         /// Описание
         /// </summary>
-        string description { get; set; }
+        public string description { get; set; }
 
         /// <summary>
         /// Список пользователей

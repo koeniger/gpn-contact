@@ -18,7 +18,7 @@ namespace Models.gpn
         [Key]
         public int product_value_id { get; set; }
 
-        [Column("product_value")]
+        [Column("property_value")]
         public string value { get; set; }
 
 

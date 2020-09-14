@@ -91,5 +91,14 @@ namespace Models.gpn
         /// </summary>
         public product_type product_type { get; set; }
         #endregion
+
+        [JsonIgnore]
+        public ICollection<product_response> Responses { get; set; }
+
+        [JsonIgnore]
+        public ICollection<product_rate> Rates { get; set; }
+
+        [JsonIgnore]
+        public ICollection<product_question> Questions { get; set; }
     }
 }

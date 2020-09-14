@@ -22,7 +22,6 @@ namespace Models.gpn
         /// </summary>
         public string product_directory_name { get; set; }
 
-
         /// <summary>
         /// Описание раздела
         /// </summary>

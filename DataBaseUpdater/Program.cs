@@ -22,6 +22,7 @@ namespace DataBaseUpdater
                 Console.WriteLine();
                 ConsoleWriter.WarningLine($"{Commands.Add} Product press {(char)Commands.Add}");
                 ConsoleWriter.WarningLine($"{Commands.Remove} Product from Products press {(char)Commands.Remove}");
+                ConsoleWriter.WarningLine($"{Commands.TestFillingOfTables} Test filling of tables press {(char)Commands.TestFillingOfTables}");
                 Console.WriteLine("Для выхода нажмите {0}", ConsoleKey.Escape);
                 k = Console.ReadKey(true);          //Ожидание нажатия кнопки пользователем
 
