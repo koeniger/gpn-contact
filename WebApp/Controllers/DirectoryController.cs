@@ -1,4 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Contact.Orchestrators.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models.gpn;
@@ -6,7 +10,7 @@ using WebApp.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace WebApp.Controllers
+namespace Contact.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -23,6 +27,14 @@ namespace WebApp.Controllers
             _orchestrator = orchestrator;
         }
 
+        [HttpGet("getByParent")]
+        public async Task<ActionResult> GetDirectoryByParent(int? parentId)
+        {
+            IDirectoryOrchestrator orch = null;//TODO заинжектить в конструкторе реализацию!!!
+            var res = await orch.GetDirectoriesByParent(parentId);
+            return Ok(res);
+        }
+
         #region GET
         /// <summary>
         /// Все разделы
@@ -30,6 +42,7 @@ namespace WebApp.Controllers
         [HttpGet]
         public async Task<ActionResult> Get()
         {
+            //TODO удалить или переделать метод, он возвращает прямо модели
             var result = await _orchestrator.GetDirectories();
 
             if (result != null) return Ok(result);

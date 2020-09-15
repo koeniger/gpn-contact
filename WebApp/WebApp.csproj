@@ -29,7 +29,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Contact.Dto\Contact.Dto.csproj" />
     <ProjectReference Include="..\DataContext\DataContext.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="DictionariesOrchestrators\Implementations\" />
   </ItemGroup>
 
 </Project>
