@@ -8,6 +8,8 @@ using System.IO;
 using Microsoft.AspNetCore.Hosting;
 using Models.gpn;
 using System.Collections.Generic;
+using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Configuration;
 
 namespace WebApp.Services
 {
@@ -16,20 +18,18 @@ namespace WebApp.Services
     /// </summary>
     public class ImageService
     {
-        private readonly IWebHostEnvironment _env;
-        public ImageService(IWebHostEnvironment env)
+        private readonly ImageProfile imageProfile;
+
+        public ImageService(IOptions<ImageProfile> opthion)
         {
-            _env = env;
+            imageProfile = opthion.Value;
         }
         /// <summary>
         /// Сохранение картинки на диске
         /// </summary>
         public async Task<string> SaveImage(IFormFile file, string table_name, int table_id)
         {
-            var imageProfile = new ImageProfile();
-
-            ValidateExtension(file, imageProfile);
-            ValidateFileSize(file, imageProfile);
+            imageProfile.Validate(file);
 
             var fileName = GetFileName(file, table_id);
 
@@ -55,35 +55,9 @@ namespace WebApp.Services
 
         private string GetWWWrootImages()
         {
-            return _env.WebRootFileProvider.GetFileInfo("images")?.PhysicalPath;
+            return imageProfile.Path;
         }
 
-        public IEnumerable<image> Indexation()
-        {
-            var imageProfile = new ImageProfile();
-
-            var images = new List<image>();
-
-            DirectoryInfo dir = new DirectoryInfo(GetWWWrootImages());
-            foreach (var item in dir.GetDirectories())
-            {
-                FileInfo[] files = item.GetFiles();
-                foreach (var file in files)
-                {
-                    try
-                    {
-                        ValidateExtension(file, imageProfile);
-
-                        ValidateFileSize(file, imageProfile);
-
-                    }
-                    catch
-                    { }
-                }
-            }
-
-            return images;
-        }
         /// <summary>
         /// Имя файла для сохранения на диске
         /// </summary>
@@ -91,60 +65,5 @@ namespace WebApp.Services
         {
             return $"{Path.GetFileNameWithoutExtension(file.FileName.Replace(" ", ""))}_{table_id:D5}.{Path.GetExtension(file.FileName)}";
         }
-
-        #region ValidateExtension
-        /// <summary>
-        /// Проверка на правильность расширения
-        /// </summary>
-        private void ValidateExtension(IFormFile file, ImageProfile imageProfile)
-        {
-            ValidateExtension(file.FileName, imageProfile);
-        }
-
-        /// <summary>
-        /// Проверка на правильность расширения
-        /// </summary>
-        private void ValidateExtension(FileInfo file, ImageProfile imageProfile)
-        {
-            ValidateExtension(file.FullName, imageProfile);
-        }
-
-        private void ValidateExtension(string fileName, ImageProfile imageProfile)
-        {
-            var fileExtension = Path.GetExtension(fileName);
-
-            if (imageProfile.AllowedExtensions.Any(ext => ext == fileExtension.ToLower()))
-                return;
-
-            throw new Exception("Extension error");
-        }
-        #endregion
-
-        #region ValidateFileSize
-        /// <summary>
-        /// Проверка на превышение размера файлом
-        /// </summary>
-        private void ValidateFileSize(IFormFile file, ImageProfile imageProfile)
-        {
-            ValidateFileSize(file.Length, imageProfile);
-        }
-
-        /// <summary>
-        /// Проверка на превышение размера файлом
-        /// </summary>
-        private void ValidateFileSize(FileInfo file, ImageProfile imageProfile)
-        {
-            ValidateFileSize(file.Length, imageProfile);
-        }
-
-        /// <summary>
-        /// Проверка на превышение размера файлом
-        /// </summary>
-        private void ValidateFileSize(long fileLenght, ImageProfile imageProfile)
-        {
-            if (fileLenght > imageProfile.MaxSizeBytes)
-                throw new Exception("Max size error");
-        }
-        #endregion
     }
 }

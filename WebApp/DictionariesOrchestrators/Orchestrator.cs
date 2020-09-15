@@ -1,10 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DataContext;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Models.gpn;
+using Models.secr;
+using WebApp.dto;
 
 namespace WebApp.Models
 {
@@ -193,6 +196,31 @@ namespace WebApp.Models
         public EntityEntry<image> Update(image modify_image) => _context.fdc_images.Update(modify_image);
 
         public EntityEntry<image> Remove(image remove_image) => _context.fdc_images.Remove(remove_image);
+
+        #endregion
+
+        #region Users method
+        /// <summary>
+        /// Получает объект Product из бд
+        /// </summary>
+        public async Task<user> GetUser(AuthenticateRequest model, Guid hash) => await _context.fdc_users.Include(u => u.role).SingleOrDefaultAsync(x => x.email == model.UserEmail && x.Password == hash);
+
+        public async Task<IEnumerable<user>> GetUsers() => await _context.fdc_users.Include(u => u.role).ToListAsync();
+
+        public async Task<user> GetUser(int id) => await _context.fdc_users.Include(u => u.role).FirstOrDefaultAsync(x => x.user_id == id);
+
+        public async Task<EntityEntry<user>> Add(user new_user) => await _context.fdc_users.AddAsync(new_user);
+
+        public EntityEntry<user> Update(user modify_user) => _context.fdc_users.Update(modify_user);
+
+        public EntityEntry<user> Remove(user remove_user) => _context.fdc_users.Remove(remove_user);
+
+        #endregion
+
+        #region Role method
+        public async Task<role> GetRole(string role_name) => await _context.fdc_roles.FirstOrDefaultAsync(x => x.role_name.ToLower().Contains(role_name));
+
+        public async Task<EntityEntry<role>> Add(role new_role) => await _context.fdc_roles.AddAsync(new_role);
 
         #endregion
     }

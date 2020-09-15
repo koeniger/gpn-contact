@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataBaseUpdater.Migrations
 {
     [DbContext(typeof(PostgreDbContext))]
-    [Migration("20200914120716_Initial")]
+    [Migration("20200915135203_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -442,8 +442,8 @@ namespace DataBaseUpdater.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("Password")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Password")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("contact_info")
                         .HasColumnType("text");

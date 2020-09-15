@@ -1,4 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Models.secr;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using WebApp.dto;
 using WebApp.Services;
 
@@ -16,22 +20,47 @@ namespace WebApp.Controllers
         }
 
         [HttpPost("authenticate")]
-        public IActionResult Authenticate(AuthenticateRequest model)
+        public async Task<IActionResult> Authenticate(AuthenticateRequest model)
         {
-            var response = _userService.Authenticate(model);
+            if (ModelState.IsValid)
+            {
+                var response = await _userService.Authenticate(model);
 
-            if (response == null)
-                return BadRequest(new { message = "Email или пароль не найдены!" });
+                if (response == null)
+                    return BadRequest(new { message = "Email или пароль не найдены!" });
 
-            return Ok(response);
+                return Ok(response);
+            }
+            return BadRequest();
+        }
+
+        [HttpPost("registration/{password}")]
+        public async Task<IActionResult> Registration(AuthenticateResponse model, string password)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var response = await _userService.Registration(model, password);
+
+                    if (response == null)
+                        return BadRequest(new { message = "В регистрации отказано!" });
+
+                    return Ok(response);
+                }
+                catch (Exception ex)
+                {
+                    BadRequest(new { message = "В регистрации отказано!", ex.Message });
+                }
+            }
+            return BadRequest();
         }
 
         [Authorize]
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<ActionResult<IEnumerable<user>>> GetAll()
         {
-            var users = _userService.GetAll();
-            return Ok(users);
+            return Ok(await _userService.GetAll());
         }
     }
 }

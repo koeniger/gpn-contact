@@ -440,8 +440,8 @@ namespace DataBaseUpdater.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("Password")
-                        .HasColumnType("text");
+                    b.Property<Guid>("Password")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("contact_info")
                         .HasColumnType("text");

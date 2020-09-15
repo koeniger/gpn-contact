@@ -26,7 +26,7 @@ namespace DataBaseUpdater
                 Console.WriteLine("Для выхода нажмите {0}", ConsoleKey.Escape);
                 k = Console.ReadKey(true);          //Ожидание нажатия кнопки пользователем
 
-                cmd.Command(context, k.KeyChar);
+                cmd.Command(context, k.Key);
 
             } while (k.Key != ConsoleKey.Escape);   //Проверка нажатия кнопки Escape
         }

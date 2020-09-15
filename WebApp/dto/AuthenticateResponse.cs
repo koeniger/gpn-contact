@@ -12,6 +12,10 @@ namespace WebApp.dto
         public string ContactInfo { get; set; }
         public string Token { get; set; }
 
+        public AuthenticateResponse()
+        { 
+        
+        }
 
         public AuthenticateResponse(user user, string token)
         {

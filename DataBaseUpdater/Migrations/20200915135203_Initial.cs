@@ -206,7 +206,7 @@ namespace DataBaseUpdater.Migrations
                     contact_info = table.Column<string>(nullable: true),
                     role_id = table.Column<int>(nullable: true),
                     contractor_id = table.Column<int>(nullable: true),
-                    Password = table.Column<string>(nullable: true)
+                    Password = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {

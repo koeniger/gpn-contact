@@ -8,7 +8,7 @@ public class AuthorizeAttribute : Attribute, IAuthorizationFilter
 {
     public void OnAuthorization(AuthorizationFilterContext context)
     {
-        var user = (Models.secr.user)context.HttpContext.Items["User"];
+        var user = context.HttpContext.Items["User"];
         if (user == null)
         {
             // not logged in

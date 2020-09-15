@@ -12,7 +12,7 @@ namespace DataBaseUpdater.ConsoleCommander
         /// </summary>
         /// <param name="key"></param>
         /// <returns></returns>
-        public bool Command(UpdateContext context, char key)
+        public bool Command(UpdateContext context, ConsoleKey key)
         {
             Commands command = (Commands)(Convert.ToInt32(key));
             switch (command)
@@ -36,6 +36,11 @@ namespace DataBaseUpdater.ConsoleCommander
                         new DataContextTest().TestFillingOfTables(context);
                         return true;
                     }
+                case Commands.AddTestImages:
+                    {
+                        new Images().AddTestImages(context);
+                        return true;
+                    }
                 default:
                     {
                         return false;
@@ -50,6 +55,7 @@ namespace DataBaseUpdater.ConsoleCommander
         Remove = ConsoleKey.D2,
         Test = ConsoleKey.D3,
         TestFillingOfTables = ConsoleKey.D9,
+        AddTestImages = ConsoleKey.I,
         Esc = ConsoleKey.Escape
     }
 }

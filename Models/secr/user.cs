@@ -1,4 +1,5 @@
 ﻿using Models.gpn;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -61,6 +62,6 @@ namespace Models.secr
         #endregion
 
         [JsonIgnore]
-        public string Password { get; set; }
+        public Guid Password { get; set; }
     }
 }
