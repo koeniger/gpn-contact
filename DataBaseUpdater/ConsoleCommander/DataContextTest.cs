@@ -1,18 +1,18 @@
 ﻿//#define Role
 //#define Contractor
 //#define User
-//#define OKEI
+//define OKEI
 //#define ProductDirectory
-#define ProductPropertyType
-#define ProductType
+//#define ProductPropertyType
+//#define ProductType
 #define ProductProperty
 #define Product
-#define ProductValue
-#define ProductQuestion
-#define ProductRate
-#define ProductResponse
-#define ContractorRate
-#define ContractorResponse
+//#define ProductValue
+//#define ProductQuestion
+//#define ProductRate
+//#define ProductResponse
+//#define ContractorRate
+//#define ContractorResponse
 
 
 using DataBaseUpdater.DataContext;
@@ -397,8 +397,6 @@ namespace DataBaseUpdater.ConsoleCommander
 
             #region ProductPropertyType
 #if ProductPropertyType
-#endif
-            #endregion
             try
             {
                 var productPropertyType = new List<product_property_type>()
@@ -434,6 +432,8 @@ namespace DataBaseUpdater.ConsoleCommander
             {
                 Console.WriteLine(ex.Message);
             }
+#endif
+            #endregion
             #region ProductType
 #if ProductType
             try
@@ -504,7 +504,7 @@ namespace DataBaseUpdater.ConsoleCommander
                 {
                     new product_property()
                     {
-                        product_property_id = 0,
+                        product_property_id = 10,
                         property_name = "Антисептики",
                         product_property_type_id = chemPropType.product_property_type_id,
                         product_property_type = chemPropType,
@@ -515,25 +515,25 @@ namespace DataBaseUpdater.ConsoleCommander
                     },
                     new product_property()
                     {
-                        product_property_id = 0,
+                        product_property_id = 11,
                         property_name = "для Windows",
                         product_property_type_id = softPropType.product_property_type_id,
-                        product_property_type = softPropType,
+                        //product_property_type = softPropType,
                         okei_id = amount.okei_id,
-                        okei = amount,
+                        //okei = amount,
                         product_type_id = soft.product_type_id,
-                        product_type = soft
+                       // product_type = soft
                     },
                     new product_property()
                     {
-                        product_property_id = 0,
+                        product_property_id = 12,
                         property_name = "Весовое оборудование",
                         product_property_type_id = equipPropType.product_property_type_id,
-                        product_property_type = equipPropType,
+                        //product_property_type = equipPropType,
                         okei_id = weight.okei_id,
-                        okei = weight,
+                        //okei = weight,
                         product_type_id = equip.product_type_id,
-                        product_type = equip
+                        //product_type = equip
                     },
                 };
 

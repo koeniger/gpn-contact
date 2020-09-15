@@ -1,3 +1,4 @@
+using System.Linq;
 using DataContext;
 using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
 using JavaScriptEngineSwitcher.V8;
@@ -13,6 +14,10 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using React.AspNet;
 using System.Text;
+using AutoMapper;
+using Contact.Dto;
+using Contact.Orchestrators.Interfaces;
+using WebApp.DictionariesOrchestrators.Implementations;
 using WebApp.Helpers;
 using WebApp.Models;
 using WebApp.Services;
@@ -79,6 +84,8 @@ namespace WebApp
             #region подключение DataContext
 
             services.AddScoped<Orchestrator>();
+            services.AddScoped<IDirectoryOrchestrator, DirectoryOrchestrator>();
+            services.AddScoped<ISearchOrchestartor, SearchOrchestartor>();
 
             services.AddDbContext<ContactContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("ContactDatabase")));
@@ -115,6 +122,22 @@ namespace WebApp
 
             // configure DI for application services
             services.AddScoped<IUserService, UserService>();
+            #endregion
+
+            #region AutoMapper
+
+            var profiles = typeof(MappingProfile).Assembly.GetTypes().Where(t => t.BaseType == typeof(Profile));
+            var mappingConfig = new MapperConfiguration(mc =>
+            {
+                foreach (var profile in profiles)
+                {
+                    mc.AddProfile(profile);
+                }
+            });
+            mappingConfig.AssertConfigurationIsValid();
+            IMapper mapper = mappingConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
             #endregion
         }
 

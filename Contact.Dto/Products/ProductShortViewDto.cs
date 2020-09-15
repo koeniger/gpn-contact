@@ -12,7 +12,7 @@ namespace Contact.Dto.Products
         /// <summary>
         /// Ид
         /// </summary>
-        public long Id { get; set; }
+        public int Id { get; set; }
         /// <summary>
         /// Наименование продукта
         /// </summary>

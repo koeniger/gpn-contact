@@ -10,6 +10,7 @@ namespace DataBaseUpdater.DataContext
         {
             try
             {
+                Database.ExecuteSqlCommand(Helpers.AddDbRolesScript());
                 Database.EnsureCreated();
             }
             catch(Exception ex)
