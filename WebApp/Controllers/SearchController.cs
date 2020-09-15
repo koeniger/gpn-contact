@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Contact.Dto.Search;
+﻿using Contact.Dto.Search;
 using Contact.Orchestrators.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace Contact.Controllers
 {
@@ -13,19 +9,23 @@ namespace Contact.Controllers
     [ApiController]
     public class SearchController : ControllerBase
     {
+        private readonly ISearchOrchestartor _searchOrchestrator;
+        public SearchController(ISearchOrchestartor searchOrchestrator)
+        {
+            _searchOrchestrator = searchOrchestrator;
+        }
+
         [HttpPost("searchProdByFilter")]
         public async Task<ActionResult> SearchProductsByFilter(SearchRequestObjectDto filter)
         {
-            ISearchOrchestartor orch = null;//TODO заинжектить в конструкторе реализацию!!!
-            var res = await orch.SearchProductsByFilter(filter);
+            var res = await _searchOrchestrator.SearchProductsByFilter(filter);
             return Ok(res);
         }
 
         [HttpPost("searchGroupsByDirectory")]
         public async Task<ActionResult> SearchGroupsByDirectory(int? directoryId)
         {
-            ISearchOrchestartor orch = null;//TODO заинжектить в конструкторе реализацию!!!
-            var res = await orch.SearchGroupsByDirectory(directoryId);
+            var res = await _searchOrchestrator.SearchGroupsByDirectory(directoryId);
             return Ok(res);
         }
     }
