@@ -80,6 +80,8 @@ namespace WebApp
 
             services.AddScoped<Orchestrator>();
 
+            services.AddScoped<ImageService>();
+
             services.AddDbContext<ContactContext>(options =>
             options.UseNpgsql(Configuration.GetConnectionString("ContactDatabase")));
             #endregion

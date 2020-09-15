@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models.gpn;
 using WebApp.Models;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using WebApp.Services;
 
 namespace WebApp.Controllers
 {
@@ -20,10 +20,12 @@ namespace WebApp.Controllers
         /// </summary>
         private readonly Orchestrator _orchestrator;
 
+        private readonly ImageService _imageService;
 
-        public ImageController(Orchestrator orchestrator)
+        public ImageController(Orchestrator orchestrator, ImageService imageService)
         {
             _orchestrator = orchestrator;
+            _imageService = imageService;
         }
 
         [HttpGet("id")]
@@ -139,6 +141,39 @@ namespace WebApp.Controllers
                 return Ok(response);
             }
             return NotFound($"Изображение {id} не найдено");
+        }
+
+        /// <summary>
+        /// Загрузка картинки на сервер
+        /// </summary>
+        [HttpPost("Upload/{table_name}/{table_id:int}/{main:bool}")]
+        public async Task<ActionResult> Upload(IFormFile file, string table_name, int table_id, bool main = true)
+        {
+            if (file != null && file.Length != 0)
+            {
+                if (ModelState.IsValid)
+                {
+                    try
+                    {
+                        var filePath = await _imageService.SaveImage(file, table_name, table_id);
+
+                        image db_image = new image() {
+                            any_table_id = table_id,
+                            any_table_name = table_name,
+                            image_path = filePath,
+                            is_main = main
+                        };
+
+                        return await this.Post(db_image);
+                    }
+                    catch (Exception ex)
+                    {
+                        return BadRequest(ex);
+                    }
+                }
+            }
+            return BadRequest();
+
         }
         #endregion
     }
