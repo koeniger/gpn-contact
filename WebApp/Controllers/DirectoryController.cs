@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Contact.Orchestrators.Interfaces;
+﻿using Contact.Orchestrators.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models.gpn;
+using System.Threading.Tasks;
 using WebApp.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -20,18 +17,18 @@ namespace Contact.Controllers
         /// БД
         /// </summary>
         private readonly Orchestrator _orchestrator;
+        private readonly IDirectoryOrchestrator _directoryOrchestrator;
 
-
-        public DirectoryController(Orchestrator orchestrator)
+        public DirectoryController(Orchestrator orchestrator, IDirectoryOrchestrator directoryOrchestrator)
         {
             _orchestrator = orchestrator;
+            _directoryOrchestrator = directoryOrchestrator;
         }
 
         [HttpGet("getByParent")]
         public async Task<ActionResult> GetDirectoryByParent(int? parentId)
         {
-            IDirectoryOrchestrator orch = null;//TODO заинжектить в конструкторе реализацию!!!
-            var res = await orch.GetDirectoriesByParent(parentId);
+            var res = await _directoryOrchestrator.GetDirectoriesByParent(parentId);
             return Ok(res);
         }
 
