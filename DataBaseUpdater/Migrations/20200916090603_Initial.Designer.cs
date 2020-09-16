@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DataBaseUpdater.Migrations
 {
     [DbContext(typeof(PostgreDbContext))]
-    [Migration("20200916081652_Initial")]
+    [Migration("20200916090603_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -437,7 +437,7 @@ namespace DataBaseUpdater.Migrations
                     b.Property<string>("contact_info")
                         .HasColumnType("text");
 
-                    b.Property<Guid>("contractor_id")
+                    b.Property<Guid?>("contractor_id")
                         .HasColumnType("uuid");
 
                     b.Property<string>("email")
@@ -616,9 +616,7 @@ namespace DataBaseUpdater.Migrations
                 {
                     b.HasOne("Models.gpn.contractor", "contractor")
                         .WithMany()
-                        .HasForeignKey("contractor_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("contractor_id");
 
                     b.HasOne("Models.secr.role", "role")
                         .WithMany("users")

@@ -9,7 +9,7 @@ namespace Contact.Dto.Directories
     /// </summary>
     public class DirectoryLazyDto
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public bool HasChildren { get; set; }
     }

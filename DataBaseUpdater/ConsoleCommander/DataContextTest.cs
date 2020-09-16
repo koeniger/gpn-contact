@@ -1,12 +1,12 @@
-﻿//#define Role
+﻿#define Role
 //#define Contractor
 //#define User
 //define OKEI
 //#define ProductDirectory
 //#define ProductPropertyType
 //#define ProductType
-#define ProductProperty
-#define Product
+//#define ProductProperty
+//#define Product
 //#define ProductValue
 //#define ProductQuestion
 //#define ProductRate
@@ -144,12 +144,21 @@ namespace DataBaseUpdater.ConsoleCommander
             {
                 var roles = new List<role>()
                 {
-                    new role(){ role_id = 0, role_name = "admin", description = "DB administrator"},
-                    new role(){ role_id = 0, role_name = "user", description = "DB user"},
-                    new role(){ role_id = 0, role_name = "contractor", description = "contractor"}
+                    new role(){ role_id = Guid.Empty, role_name = "administrator", description = "Администратор"},
+                    new role(){ role_id = Guid.Empty, role_name = "employee", description = "Внутренний сотрудник ГПН"},
+                    new role(){ role_id = Guid.Empty, role_name = "contractor", description = "Поставщик"}
                 };
 
                 context.fdc_roles.AddRange(roles);
+
+                try
+                {
+                    context.SaveChanges();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
             }
             catch(Exception ex)
             {

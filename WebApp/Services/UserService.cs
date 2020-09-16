@@ -65,12 +65,15 @@ namespace WebApp.Services
                 throw new Exception("Роль пользователя не существует");
             }
 
-            contractor user_contractor = await _orchestrator.GetContractor(new_user.Contractor.contractor_id);
-
-            if (user_contractor == null)
+            contractor user_contractor = null;
+            if (user_role.role_name == "contractor")
             {
-                throw new Exception("Поставщик не существует");
+                user_contractor = await _orchestrator.GetContractor(new_user.Contractor.contractor_id);
             }
+            //if (user_contractor == null)
+            //{
+            //    throw new Exception("Поставщик не существует");
+            //}
 
             user user = await _orchestrator.GetUserByEmail(new_user.Email);
 
@@ -88,7 +91,7 @@ namespace WebApp.Services
                 Password = GetHash(new_user.Password),
                 role_id = user_role.role_id,
                 role = user_role,
-                contractor_id = user_contractor.contractor_id,
+        //        contractor_id = user_contractor != null ? user_contractor.contractor_id : Guid.Empty,
                 contractor = user_contractor
             };
 

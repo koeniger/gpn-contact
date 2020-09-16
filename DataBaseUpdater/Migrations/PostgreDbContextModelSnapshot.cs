@@ -435,7 +435,7 @@ namespace DataBaseUpdater.Migrations
                     b.Property<string>("contact_info")
                         .HasColumnType("text");
 
-                    b.Property<Guid>("contractor_id")
+                    b.Property<Guid?>("contractor_id")
                         .HasColumnType("uuid");
 
                     b.Property<string>("email")
@@ -614,9 +614,7 @@ namespace DataBaseUpdater.Migrations
                 {
                     b.HasOne("Models.gpn.contractor", "contractor")
                         .WithMany()
-                        .HasForeignKey("contractor_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("contractor_id");
 
                     b.HasOne("Models.secr.role", "role")
                         .WithMany("users")

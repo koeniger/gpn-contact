@@ -196,7 +196,7 @@ namespace DataBaseUpdater.Migrations
                     position = table.Column<string>(nullable: true),
                     contact_info = table.Column<string>(nullable: true),
                     role_id = table.Column<Guid>(nullable: false),
-                    contractor_id = table.Column<Guid>(nullable: false),
+                    contractor_id = table.Column<Guid>(nullable: true),
                     Password = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
@@ -207,7 +207,7 @@ namespace DataBaseUpdater.Migrations
                         column: x => x.contractor_id,
                         principalTable: "fdc_contractors",
                         principalColumn: "contractor_id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_fdc_users_fdc_roles_role_id",
                         column: x => x.role_id,

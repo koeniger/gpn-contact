@@ -55,14 +55,16 @@ namespace Models.secr
         [NotNull]
         public role role { get; set; }
 
-        /// <summary>
-        /// Код поставщика
-        /// </summary>
-        [ForeignKey("contractor")]
-        public Guid contractor_id { get; set; }
+        ///// <summary>
+        ///// Код поставщика
+        ///// </summary>
+        //[ForeignKey("contractor")]
+        //[MaybeNull]
+        //public Guid? contractor_id { get; set; }
         /// <summary>
         /// Поставщика
         /// </summary>
+        [MaybeNull]
         public contractor contractor { get; set; }
 
         #endregion
