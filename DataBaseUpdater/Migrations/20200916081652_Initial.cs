@@ -1,6 +1,5 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace DataBaseUpdater.Migrations
 {
@@ -12,8 +11,7 @@ namespace DataBaseUpdater.Migrations
                 name: "fdc_contractors",
                 columns: table => new
                 {
-                    contractor_id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    contractor_id = table.Column<Guid>(nullable: false),
                     contractor_name = table.Column<string>(nullable: true),
                     description = table.Column<string>(nullable: true),
                     contact_info = table.Column<string>(nullable: true)
@@ -27,9 +25,8 @@ namespace DataBaseUpdater.Migrations
                 name: "fdc_images",
                 columns: table => new
                 {
-                    image_id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    any_table_id = table.Column<int>(nullable: false),
+                    image_id = table.Column<Guid>(nullable: false),
+                    any_table_id = table.Column<Guid>(nullable: false),
                     any_table_name = table.Column<string>(nullable: true),
                     image_path = table.Column<string>(nullable: true),
                     is_main = table.Column<bool>(nullable: false)
@@ -43,14 +40,14 @@ namespace DataBaseUpdater.Migrations
                 name: "fdc_okei",
                 columns: table => new
                 {
-                    okei_id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    okei_id = table.Column<Guid>(nullable: false),
                     okei_code = table.Column<int>(nullable: false),
                     okei_name = table.Column<string>(nullable: true),
                     symbol_ru = table.Column<string>(nullable: true),
                     symbol_all = table.Column<string>(nullable: true),
                     symbol_ru_code = table.Column<string>(nullable: true),
-                    symbol_all_code = table.Column<string>(nullable: true)
+                    symbol_all_code = table.Column<string>(nullable: true),
+                    is_used = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -61,11 +58,10 @@ namespace DataBaseUpdater.Migrations
                 name: "fdc_product_directories",
                 columns: table => new
                 {
-                    product_directory_id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    product_directory_id = table.Column<Guid>(nullable: false),
                     product_directory_name = table.Column<string>(nullable: true),
                     description = table.Column<string>(nullable: true),
-                    parent_id = table.Column<int>(nullable: true)
+                    parent_id = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -82,7 +78,7 @@ namespace DataBaseUpdater.Migrations
                 name: "fdc_products_properties_types",
                 columns: table => new
                 {
-                    product_property_type_id = table.Column<string>(nullable: false),
+                    product_property_type_id = table.Column<Guid>(nullable: false),
                     property_type_name = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
@@ -94,8 +90,7 @@ namespace DataBaseUpdater.Migrations
                 name: "fdc_products_types",
                 columns: table => new
                 {
-                    product_type_id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    product_type_id = table.Column<Guid>(nullable: false),
                     product_type_name = table.Column<string>(nullable: true),
                     is_archive = table.Column<bool>(nullable: false),
                     date_change = table.Column<DateTime>(nullable: false),
@@ -110,8 +105,7 @@ namespace DataBaseUpdater.Migrations
                 name: "fdc_roles",
                 columns: table => new
                 {
-                    role_id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    role_id = table.Column<Guid>(nullable: false),
                     role_name = table.Column<string>(nullable: true),
                     description = table.Column<string>(nullable: true)
                 },
@@ -124,8 +118,7 @@ namespace DataBaseUpdater.Migrations
                 name: "fdc_products",
                 columns: table => new
                 {
-                    product_id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    product_id = table.Column<Guid>(nullable: false),
                     product_name = table.Column<string>(nullable: true),
                     description_short = table.Column<string>(nullable: true),
                     description_full = table.Column<string>(nullable: true),
@@ -133,9 +126,9 @@ namespace DataBaseUpdater.Migrations
                     is_archive = table.Column<bool>(nullable: false),
                     date_change = table.Column<DateTime>(nullable: false),
                     date_archive = table.Column<DateTime>(nullable: false),
-                    product_directory_id = table.Column<int>(nullable: true),
-                    contractor_id = table.Column<int>(nullable: true),
-                    product_type_id = table.Column<int>(nullable: true)
+                    product_directory_id = table.Column<Guid>(nullable: false),
+                    contractor_id = table.Column<Guid>(nullable: false),
+                    product_type_id = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -145,31 +138,30 @@ namespace DataBaseUpdater.Migrations
                         column: x => x.contractor_id,
                         principalTable: "fdc_contractors",
                         principalColumn: "contractor_id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_fdc_products_fdc_product_directories_product_directory_id",
                         column: x => x.product_directory_id,
                         principalTable: "fdc_product_directories",
                         principalColumn: "product_directory_id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_fdc_products_fdc_products_types_product_type_id",
                         column: x => x.product_type_id,
                         principalTable: "fdc_products_types",
                         principalColumn: "product_type_id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "fdc_products_properties",
                 columns: table => new
                 {
-                    product_property_id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    product_property_id = table.Column<Guid>(nullable: false),
                     property_name = table.Column<string>(nullable: true),
-                    product_type_id = table.Column<int>(nullable: false),
-                    product_property_type_id = table.Column<string>(nullable: true),
-                    okei_id = table.Column<int>(nullable: false)
+                    product_type_id = table.Column<Guid>(nullable: false),
+                    product_property_type_id = table.Column<Guid>(nullable: false),
+                    okei_id = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -185,7 +177,7 @@ namespace DataBaseUpdater.Migrations
                         column: x => x.product_property_type_id,
                         principalTable: "fdc_products_properties_types",
                         principalColumn: "product_property_type_id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_fdc_products_properties_fdc_products_types_product_type_id",
                         column: x => x.product_type_id,
@@ -198,14 +190,13 @@ namespace DataBaseUpdater.Migrations
                 name: "fdc_users",
                 columns: table => new
                 {
-                    user_id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    user_id = table.Column<Guid>(nullable: false),
                     email = table.Column<string>(nullable: true),
                     user_name = table.Column<string>(nullable: true),
                     position = table.Column<string>(nullable: true),
                     contact_info = table.Column<string>(nullable: true),
-                    role_id = table.Column<int>(nullable: true),
-                    contractor_id = table.Column<int>(nullable: true),
+                    role_id = table.Column<Guid>(nullable: false),
+                    contractor_id = table.Column<Guid>(nullable: false),
                     Password = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
@@ -216,25 +207,24 @@ namespace DataBaseUpdater.Migrations
                         column: x => x.contractor_id,
                         principalTable: "fdc_contractors",
                         principalColumn: "contractor_id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_fdc_users_fdc_roles_role_id",
                         column: x => x.role_id,
                         principalTable: "fdc_roles",
                         principalColumn: "role_id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "fdc_products_values",
                 columns: table => new
                 {
-                    product_value_id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    product_value_id = table.Column<Guid>(nullable: false),
                     product_value_min = table.Column<string>(nullable: true),
                     product_value_max = table.Column<string>(nullable: true),
-                    product_id = table.Column<int>(nullable: false),
-                    product_property_id = table.Column<int>(nullable: false)
+                    product_id = table.Column<Guid>(nullable: false),
+                    product_property_id = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -257,12 +247,11 @@ namespace DataBaseUpdater.Migrations
                 name: "fdc_contractors_rates",
                 columns: table => new
                 {
-                    contractor_rate_id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    contractor_rate_id = table.Column<Guid>(nullable: false),
                     rate = table.Column<int>(nullable: false),
                     rate_date = table.Column<DateTime>(nullable: false),
-                    user_id = table.Column<int>(nullable: true),
-                    contractor_id = table.Column<int>(nullable: true)
+                    user_id = table.Column<Guid>(nullable: false),
+                    contractor_id = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -272,26 +261,25 @@ namespace DataBaseUpdater.Migrations
                         column: x => x.contractor_id,
                         principalTable: "fdc_contractors",
                         principalColumn: "contractor_id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_fdc_contractors_rates_fdc_users_user_id",
                         column: x => x.user_id,
                         principalTable: "fdc_users",
                         principalColumn: "user_id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "fdc_contractors_responses",
                 columns: table => new
                 {
-                    contractor_response_id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    contractor_response_id = table.Column<Guid>(nullable: false),
                     response_date = table.Column<DateTime>(nullable: false),
                     response = table.Column<string>(nullable: true),
-                    user_id = table.Column<int>(nullable: true),
-                    contractor_id = table.Column<int>(nullable: true),
-                    parent_id = table.Column<int>(nullable: true)
+                    user_id = table.Column<Guid>(nullable: false),
+                    contractor_id = table.Column<Guid>(nullable: false),
+                    parent_id = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -301,7 +289,7 @@ namespace DataBaseUpdater.Migrations
                         column: x => x.contractor_id,
                         principalTable: "fdc_contractors",
                         principalColumn: "contractor_id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_fdc_contractors_responses_fdc_contractors_responses_parent_~",
                         column: x => x.parent_id,
@@ -313,20 +301,19 @@ namespace DataBaseUpdater.Migrations
                         column: x => x.user_id,
                         principalTable: "fdc_users",
                         principalColumn: "user_id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "fdc_products_questions",
                 columns: table => new
                 {
-                    product_question_id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    product_question_id = table.Column<Guid>(nullable: false),
                     question = table.Column<string>(nullable: true),
                     questions_date = table.Column<DateTime>(nullable: false),
-                    product_id = table.Column<int>(nullable: true),
-                    user_id = table.Column<int>(nullable: true),
-                    parent_id = table.Column<int>(nullable: true)
+                    product_id = table.Column<Guid>(nullable: false),
+                    user_id = table.Column<Guid>(nullable: false),
+                    parent_id = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -342,25 +329,24 @@ namespace DataBaseUpdater.Migrations
                         column: x => x.product_id,
                         principalTable: "fdc_products",
                         principalColumn: "product_id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_fdc_products_questions_fdc_users_user_id",
                         column: x => x.user_id,
                         principalTable: "fdc_users",
                         principalColumn: "user_id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "fdc_products_rates",
                 columns: table => new
                 {
-                    product_rate_id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    product_rate_id = table.Column<Guid>(nullable: false),
                     rate = table.Column<int>(nullable: false),
                     rate_date = table.Column<DateTime>(nullable: false),
-                    user_id = table.Column<int>(nullable: true),
-                    product_id = table.Column<int>(nullable: true)
+                    user_id = table.Column<Guid>(nullable: false),
+                    product_id = table.Column<Guid>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -370,26 +356,25 @@ namespace DataBaseUpdater.Migrations
                         column: x => x.product_id,
                         principalTable: "fdc_products",
                         principalColumn: "product_id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_fdc_products_rates_fdc_users_user_id",
                         column: x => x.user_id,
                         principalTable: "fdc_users",
                         principalColumn: "user_id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
                 name: "fdc_products_responses",
                 columns: table => new
                 {
-                    product_response_id = table.Column<int>(nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    product_response_id = table.Column<Guid>(nullable: false),
                     response_date = table.Column<DateTime>(nullable: false),
                     response = table.Column<string>(nullable: true),
-                    user_id = table.Column<int>(nullable: true),
-                    product_id = table.Column<int>(nullable: true),
-                    parent_id = table.Column<int>(nullable: true)
+                    user_id = table.Column<Guid>(nullable: false),
+                    product_id = table.Column<Guid>(nullable: false),
+                    parent_id = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -405,13 +390,13 @@ namespace DataBaseUpdater.Migrations
                         column: x => x.product_id,
                         principalTable: "fdc_products",
                         principalColumn: "product_id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_fdc_products_responses_fdc_users_user_id",
                         column: x => x.user_id,
                         principalTable: "fdc_users",
                         principalColumn: "user_id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
