@@ -7,6 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WebApp.Services;
+using Models.secr;
+using System.Security.Principal;
+using System.Security.Claims;
 
 namespace WebApp.Helpers
 {
@@ -50,8 +53,12 @@ namespace WebApp.Helpers
                 var jwtToken = (JwtSecurityToken)validatedToken;
                 var userId = int.Parse(jwtToken.Claims.First(x => x.Type == "id").Value);
 
-                // attach user to context on successful jwt validation
-                context.Items["User"] = userService.GetById(userId);
+               var user_context = userService.GetById(userId).Result;
+                //// attach user to context on successful jwt validation
+                var user = new GenericPrincipal(userService.GetClaimsIdentity(user_context), new string[] { "unknow"});
+
+                context.User = user;
+                context.Items["User"] = user;
             }
             catch
             {

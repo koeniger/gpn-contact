@@ -203,12 +203,13 @@ namespace WebApp.Models
         /// <summary>
         /// Получает объект Product из бд
         /// </summary>
-        public async Task<user> GetUser(AuthenticateRequest model, Guid hash) => await _context.fdc_users.Include(u => u.role).SingleOrDefaultAsync(x => x.email == model.UserEmail && x.Password == hash);
+        public async Task<user> GetUser(AuthenticateRequest model, Guid hash) => await _context.fdc_users.Include(u => u.role).Include(c => c.contractor).SingleOrDefaultAsync(x => x.email == model.UserEmail && x.Password == hash);
 
-        public async Task<IEnumerable<user>> GetUsers() => await _context.fdc_users.Include(u => u.role).ToListAsync();
+        public async Task<IEnumerable<user>> GetUsers() => await _context.fdc_users.Include(u => u.role).Include(c => c.contractor).ToListAsync();
 
-        public async Task<user> GetUser(int id) => await _context.fdc_users.Include(u => u.role).FirstOrDefaultAsync(x => x.user_id == id);
+        public async Task<user> GetUser(int id) => await _context.fdc_users.Include(u => u.role).Include(c => c.contractor).FirstOrDefaultAsync(x => x.user_id == id);
 
+        public async Task<user> GetUserByEmail(string email) => await _context.fdc_users.Include(u => u.role).Include(c => c.contractor).FirstOrDefaultAsync(x => x.email.ToLower() == email.ToLower());
         public async Task<EntityEntry<user>> Add(user new_user) => await _context.fdc_users.AddAsync(new_user);
 
         public EntityEntry<user> Update(user modify_user) => _context.fdc_users.Update(modify_user);

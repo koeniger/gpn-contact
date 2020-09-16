@@ -12,6 +12,8 @@ using WebApp.dto;
 using WebApp.Models;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Models.gpn;
+using System.Security.Principal;
 
 namespace WebApp.Services
 {
@@ -20,17 +22,12 @@ namespace WebApp.Services
         Task<AuthenticateResponse> Authenticate(AuthenticateRequest model);
         Task<IEnumerable<user>> GetAll();
         Task<user> GetById(int id);
-        Task<AuthenticateResponse> Registration(AuthenticateResponse user, string password);
+        Task<AuthenticateResponse> Registration(RegistrationModel user);
+        ClaimsIdentity GetClaimsIdentity(user user_context);
     }
 
     public class UserService : IUserService
     {
-        // users hardcoded for simplicity, store in a db with hashed passwords in production applications
-        //private List<user> _users = new List<user>
-        //{
-        //    new user { user_id = 1, email = "Test", user_name = "User", position = "test", Password = "test" }
-        //};
-
         /// <summary>
         /// БД
         /// </summary>
@@ -59,33 +56,40 @@ namespace WebApp.Services
             return new AuthenticateResponse(user, token);
         }
 
-        public async Task<AuthenticateResponse> Registration(AuthenticateResponse new_user, string password)
+        public async Task<AuthenticateResponse> Registration(RegistrationModel new_user)
         {
-            role user_role = await _orchestrator.GetRole("unknow");
+            role user_role = await _orchestrator.GetRole(new_user.Role.role_name);
 
             if (user_role == null)
             {
-                user_role = new role() { role_name = "unknow", description = "unknow" };
+                throw new Exception("Роль пользователя не существует");
+            }
 
-                var result_role = await _orchestrator.Add(user_role);
-                if (result_role != null && result_role.State == EntityState.Added)
-                {
-                    await _orchestrator.SaveChangesAsync();
+            contractor user_contractor = await _orchestrator.GetContractor(new_user.Contractor.contractor_id);
 
-                    user_role = await _orchestrator.GetRole("unknow");
-                }
-                else return null;
+            if (user_contractor == null)
+            {
+                throw new Exception("Поставщик не существует");
+            }
+
+            user user = await _orchestrator.GetUserByEmail(new_user.Email);
+
+            if (user != null)
+            {
+                throw new Exception("Пользователь с таким email зарегистрирован");
             }
 
             user user_context = new user()
             {
-                user_id = new_user.Id,
                 email = new_user.Email,
                 user_name = new_user.Name,
                 position = new_user.Position,
-                Password = GetHash(password),
+                contact_info = new_user.ContactInfo,
+                Password = GetHash(new_user.Password),
                 role_id = user_role.role_id,
-                role = user_role
+                role = user_role,
+                contractor_id = user_contractor.contractor_id,
+                contractor = user_contractor
             };
 
             var result = await _orchestrator.Add(user_context);
@@ -109,7 +113,12 @@ namespace WebApp.Services
 
         public async Task<user> GetById(int id)
         {
-            return await _orchestrator.GetUser(id);
+            user result = await _orchestrator.GetUser(id);
+            if (result != null)
+            {
+                return result;
+            }
+            return null;
         }
 
         // helper methods
@@ -121,16 +130,21 @@ namespace WebApp.Services
             var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { 
-                    new Claim("id", user.user_id.ToString()),
-                    new Claim("role", user.role.ToString()),
-                    new Claim("name", user.user_name.ToString())
-                }),
+                Subject = GetClaimsIdentity(user),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
             return tokenHandler.WriteToken(token);
+        }
+
+        public ClaimsIdentity GetClaimsIdentity(user user)
+        {
+            return new ClaimsIdentity(new[] { 
+                    new Claim("id", user.user_id.ToString()),
+                    new Claim(ClaimTypes.Role, user.role.role_name),
+                    new Claim(ClaimTypes.Name, user.user_name)
+                });
         }
 
         public static Guid GetHash(string value)

@@ -34,14 +34,14 @@ namespace WebApp.Controllers
             return BadRequest();
         }
 
-        [HttpPost("registration/{password}")]
-        public async Task<IActionResult> Registration(AuthenticateResponse model, string password)
+        [HttpPost("registration")]
+        public async Task<IActionResult> Registration(RegistrationModel model)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var response = await _userService.Registration(model, password);
+                    var response = await _userService.Registration(model);
 
                     if (response == null)
                         return BadRequest(new { message = "В регистрации отказано!" });
