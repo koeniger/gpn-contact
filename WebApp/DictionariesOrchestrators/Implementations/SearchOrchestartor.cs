@@ -22,7 +22,7 @@ namespace WebApp.DictionariesOrchestrators.Implementations
             _context = context;
         }
 
-        public Task<DirectoryResultGroupDto[]> SearchGroupsByDirectory(int? directoryId)
+        public Task<DirectoryResultGroupDto[]> SearchGroupsByDirectory(Guid? directoryId)
         {
             var result = _context.fdc_product_directories
                 .Where(d => d.product_directory_id == directoryId)

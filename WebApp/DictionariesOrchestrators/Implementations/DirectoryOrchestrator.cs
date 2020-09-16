@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using Contact.Dto.Directories;
 using Contact.Orchestrators.Interfaces;
 using DataContext;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -17,7 +18,7 @@ namespace WebApp.DictionariesOrchestrators.Implementations
             _mapper = mapper;
             _context = context;
         }
-        public Task<DirectoryLazyDto[]> GetDirectoriesByParent(int? parentId)
+        public Task<DirectoryLazyDto[]> GetDirectoriesByParent(Guid? parentId)
         {
             var result = _context.fdc_product_directories
                 .Where(d => d.parent_id == parentId)

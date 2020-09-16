@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -41,11 +42,11 @@ namespace WebApp.Controllers
         /// <param name="productType"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult> Get(int? id)
+        public async Task<ActionResult> Get(Guid? id)
         {
             if (id != null)
             {
-                var result = await _orchestrator.GetProductType((int)id);
+                var result = await _orchestrator.GetProductType((Guid)id);
 
                 if (result != null) return Ok(result);
             }
@@ -97,7 +98,7 @@ namespace WebApp.Controllers
 
         #region Put
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, product_type type)
+        public async Task<ActionResult> Put(Guid id, product_type type)
         {
             if (ModelState.IsValid)
             {
@@ -118,7 +119,7 @@ namespace WebApp.Controllers
 
         #region Delete
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(Guid id)
         {
             var result = await _orchestrator.GetProductType(id);
 

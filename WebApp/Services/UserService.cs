@@ -21,7 +21,7 @@ namespace WebApp.Services
     {
         Task<AuthenticateResponse> Authenticate(AuthenticateRequest model);
         Task<IEnumerable<user>> GetAll();
-        Task<user> GetById(int id);
+        Task<user> GetById(Guid id);
         Task<AuthenticateResponse> Registration(RegistrationModel user);
         ClaimsIdentity GetClaimsIdentity(user user_context);
     }
@@ -111,7 +111,7 @@ namespace WebApp.Services
             return await _orchestrator.GetUsers();
         }
 
-        public async Task<user> GetById(int id)
+        public async Task<user> GetById(Guid id)
         {
             user result = await _orchestrator.GetUser(id);
             if (result != null)

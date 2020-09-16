@@ -11,6 +11,6 @@ namespace Contact.Orchestrators.Interfaces
     /// </summary>
     public interface IDirectoryOrchestrator
     {
-        Task<DirectoryLazyDto[]> GetDirectoriesByParent(int? parentId);
+        Task<DirectoryLazyDto[]> GetDirectoriesByParent(Guid? parentId);
     }
 }

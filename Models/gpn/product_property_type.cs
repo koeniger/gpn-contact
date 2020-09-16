@@ -1,5 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Models.gpn
 {
@@ -12,11 +13,13 @@ namespace Models.gpn
         /// Код типа свойства
         /// </summary>
         [Key]
-        public string product_property_type_id { get; set; }
+        [NotNull]
+        public Guid product_property_type_id { get; set; }
 
         /// <summary>
         /// Наименование типа
         /// </summary>
+        [NotNull]
         public string property_type_name { get; set; }
     }
 }

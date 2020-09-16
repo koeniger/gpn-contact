@@ -4,6 +4,7 @@ using Models.secr;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Models.gpn
 {
@@ -16,17 +17,20 @@ namespace Models.gpn
         /// Код рейтинга контрагента
         /// </summary>
         [Key]
-        public int contractor_rate_id { get; set; }
+        [NotNull]
+        public Guid contractor_rate_id { get; set; }
 
 #region CONSTRAINT
         /// <summary>
         /// Код поставщика
         /// </summary>
         [ForeignKey("contractor")]
-        public int? contractor_id { get; set; }
+        [NotNull]
+        public Guid contractor_id { get; set; }
         /// <summary>
         /// Поставщика
         /// </summary>
+        [NotNull]
         public contractor contractor { get; set; }
 #endregion
     }

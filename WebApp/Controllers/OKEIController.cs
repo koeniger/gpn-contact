@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -31,11 +32,11 @@ namespace WebApp.Controllers
         /// <param name="productType"></param>
         /// <returns></returns>
         [HttpGet("id")]
-        public async Task<ActionResult<IEnumerable<okei>>> Get(int? id = null)
+        public async Task<ActionResult<IEnumerable<okei>>> Get(Guid? id = null)
         {
             if (id != null)
             {
-                var result = await _orchestrator.GetOKEI((int)id);
+                var result = await _orchestrator.GetOKEI((Guid)id);
 
                 if (result != null) return Ok(result);
             }
@@ -95,7 +96,7 @@ namespace WebApp.Controllers
         /// Изменение объекта в БД
         /// </summary>
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, okei okei)
+        public async Task<ActionResult> Put(Guid id, okei okei)
         {
             if (ModelState.IsValid)
             {
@@ -122,7 +123,7 @@ namespace WebApp.Controllers
         /// Удаление объекта из БД по Id
         /// </summary>
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(Guid id)
         {
             var result = await _orchestrator.GetOKEI(id);
 

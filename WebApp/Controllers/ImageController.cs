@@ -29,11 +29,11 @@ namespace WebApp.Controllers
         }
 
         [HttpGet("id")]
-        public async Task<ActionResult<image>> Get(int? id = null)
+        public async Task<ActionResult<image>> Get(Guid? id = null)
         {
             if (id != null)
             {
-                var image = await _orchestrator.GetImage((int)id);
+                var image = await _orchestrator.GetImage((Guid)id);
                 if (image != null) return Ok(image);
                 else return NotFound();
             }
@@ -48,7 +48,7 @@ namespace WebApp.Controllers
 
         // GET: api/<ImageController>
         [HttpGet("{table}/{id}")]
-        public async Task<ActionResult<IEnumerable<ActionResult>>> Get(string table, int id)
+        public async Task<ActionResult<IEnumerable<ActionResult>>> Get(string table, Guid id)
         {
             var image = await _orchestrator.GetImages(table, id);
 
@@ -59,7 +59,7 @@ namespace WebApp.Controllers
 
         // GET api/<ImageController>/5
         [HttpGet("Path/{id}")]
-        public async Task<ActionResult<image>> GetPath(int id)
+        public async Task<ActionResult<image>> GetPath(Guid id)
         {
             var image = await _orchestrator.GetImage(id);
 
@@ -72,8 +72,6 @@ namespace WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                value.image_id = 0;
-
                 var result = await _orchestrator.Add(value);
 
                 if (result != null && result.State == EntityState.Added)
@@ -95,7 +93,7 @@ namespace WebApp.Controllers
 
         // PUT api/<ImageController>/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, image value)
+        public async Task<ActionResult> Put(Guid id, image value)
         {
             if (ModelState.IsValid)
             {
@@ -129,7 +127,7 @@ namespace WebApp.Controllers
         /// Удаление объекта из БД по Id
         /// </summary>
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(Guid id)
         {
             var result = await _orchestrator.GetImage(id);
 
@@ -146,8 +144,8 @@ namespace WebApp.Controllers
         /// <summary>
         /// Загрузка картинки на сервер
         /// </summary>
-        [HttpPost("Upload/{table_name}/{table_id:int}/{main:bool}")]
-        public async Task<ActionResult> Upload(IFormFile file, string table_name, int table_id, bool main = true)
+        [HttpPost("Upload/{table_name}/{table_id:Guid}/{main:bool}")]
+        public async Task<ActionResult> Upload(IFormFile file, string table_name, Guid table_id, bool main = true)
         {
             if (file != null && file.Length != 0)
             {

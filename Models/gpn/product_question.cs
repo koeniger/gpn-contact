@@ -3,6 +3,7 @@ using Models.secr;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Models.gpn
 {
@@ -15,16 +16,19 @@ namespace Models.gpn
         /// Код вопроса
         /// </summary>
         [Key]
-        public int product_question_id { get; set; }
+        [NotNull]
+        public Guid product_question_id { get; set; }
 
         /// <summary>
         /// Вопрос/Ответ
         /// </summary>
+        [NotNull]
         public string question { get; set; }
 
         /// <summary>
         /// Дата  высталение вопроса
         /// </summary>
+        [NotNull]
         public DateTime questions_date { get; set; }
 
         #region CONSTRAINT
@@ -32,7 +36,8 @@ namespace Models.gpn
         /// Код продукта
         /// </summary>
         [ForeignKey("product")]
-        public int? product_id { get; set; }
+        [NotNull]
+        public Guid product_id { get; set; }
         /// <summary>
         /// Продукт
         /// </summary>
@@ -42,7 +47,8 @@ namespace Models.gpn
         /// Код пользователя, оставившего вопрос
         /// </summary>
         [ForeignKey("user")]
-        public int? user_id { get; set; }
+        [NotNull]
+        public Guid user_id { get; set; }
 
         /// <summary>
         /// Пользователь, оставивший вопрос
@@ -53,7 +59,7 @@ namespace Models.gpn
         /// Код родительского вопроса (для многоуровневых)
         /// </summary>
         [ForeignKey("parent")]
-        public int? parent_id { get; set; }
+        public Guid? parent_id { get; set; }
 
         /// <summary>
         /// Родительский вопрос

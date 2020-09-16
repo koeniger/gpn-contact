@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models.gpn;
@@ -38,11 +39,11 @@ namespace WebApp.Controllers
 
         // GET api/<ContractorController>/5
         [HttpGet("{id}")]
-        public async Task<ActionResult> Get(int? id)
+        public async Task<ActionResult> Get(Guid? id)
         {
             if (id != null)
             {
-                var result = await _orchestrator.GetContractor((int)id);
+                var result = await _orchestrator.GetContractor((Guid)id);
 
                 if (result != null) return Ok(result);
 
@@ -77,7 +78,7 @@ namespace WebApp.Controllers
         #region GET
         // PUT api/<ContractorController>/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, contractor modify_contractor)
+        public async Task<ActionResult> Put(Guid id, contractor modify_contractor)
         {
             if (ModelState.IsValid)
             {
@@ -101,7 +102,7 @@ namespace WebApp.Controllers
 
         // DELETE api/<ContractorController>/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(Guid id)
         {
             var result = await _orchestrator.GetContractor(id);
 

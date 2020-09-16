@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace Models.gpn
@@ -13,11 +15,13 @@ namespace Models.gpn
         /// Код поставщика
         /// </summary>
         [Key]
-        public int contractor_id { get; set; }
+        [NotNull]
+        public Guid contractor_id { get; set; }
 
         /// <summary>
         /// Нименование контрагента
         /// </summary>
+        [NotNull]
         public string contractor_name { get; set; }
 
         /// <summary>

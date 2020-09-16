@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -31,11 +32,11 @@ namespace WebApp.Controllers
         /// Формируется справочник по Продуктам
         /// </summary>
         [HttpGet("product")]
-        public async Task<ActionResult<IEnumerable<product_value>>> Get(int? product = null)
+        public async Task<ActionResult<IEnumerable<product_value>>> Get(Guid? product = null)
         {
             if (product != null)
             {
-                var result = await _orchestrator.GetProductsValuesByProduct((int)product);
+                var result = await _orchestrator.GetProductsValuesByProduct((Guid)product);
                 if (result != null && result.Count() > 0) return Ok(result);
 
                 return NotFound();
@@ -50,7 +51,7 @@ namespace WebApp.Controllers
         /// Формируется справочник по свойствам продукции
         /// </summary>
         [HttpGet("product_property/{id}")]
-        public async Task<ActionResult<IEnumerable<product_value>>> GetProductsProperty(int id)
+        public async Task<ActionResult<IEnumerable<product_value>>> GetProductsProperty(Guid id)
         {
             var result = await _orchestrator.GetProductsValuesByProperty(id);
             if (result != null && result.Count() > 0) return Ok(result);
@@ -64,7 +65,7 @@ namespace WebApp.Controllers
         /// <param name="productType"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult> Get(int id)
+        public async Task<ActionResult> Get(Guid id)
         {
             var result = await _orchestrator.GetProductValue(id);
 
@@ -114,7 +115,7 @@ namespace WebApp.Controllers
         #region PUT
         // PUT api/<ProductPropertiesController>/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, product_value productValue)
+        public async Task<ActionResult> Put(Guid id, product_value productValue)
         {
             if (ModelState.IsValid)
             {
@@ -167,7 +168,7 @@ namespace WebApp.Controllers
         #region Delete
         // DELETE api/<ProductPropertiesController>/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(Guid id)
         {
             var result = await _orchestrator.GetProductValue(id);
 

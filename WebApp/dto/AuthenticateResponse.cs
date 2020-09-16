@@ -1,10 +1,11 @@
 using Models.secr;
+using System;
 
 namespace WebApp.dto
 {
     public class AuthenticateResponse
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Email { get; set; }
         public string Name { get; set; }
         public string Position { get; set; }

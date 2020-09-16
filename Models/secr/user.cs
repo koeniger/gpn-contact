@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace Models.secr
@@ -16,16 +17,19 @@ namespace Models.secr
         /// Код пользователя
         /// </summary>
         [Key]
-        public int user_id { get; set; }
+        [NotNull]
+        public Guid user_id { get; set; }
 
         /// <summary>
         /// ID для входа в систему
         /// </summary>
+        [NotNull]
         public string email { get; set; }
 
         /// <summary>
         /// Наименование пользователя (ФИО)
         /// </summary>
+        [NotNull]
         public string user_name { get; set; }
 
         /// <summary>
@@ -43,17 +47,19 @@ namespace Models.secr
         /// Код раздела справочника продукции
         /// </summary>
         [ForeignKey("role")]
-        public int? role_id { get; set; }
+        [NotNull]
+        public Guid role_id { get; set; }
         /// <summary>
         /// Раздел
         /// </summary>
+        [NotNull]
         public role role { get; set; }
 
         /// <summary>
         /// Код поставщика
         /// </summary>
         [ForeignKey("contractor")]
-        public int? contractor_id { get; set; }
+        public Guid contractor_id { get; set; }
         /// <summary>
         /// Поставщика
         /// </summary>

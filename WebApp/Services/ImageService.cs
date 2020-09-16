@@ -27,7 +27,7 @@ namespace WebApp.Services
         /// <summary>
         /// Сохранение картинки на диске
         /// </summary>
-        public async Task<string> SaveImage(IFormFile file, string table_name, int table_id)
+        public async Task<string> SaveImage(IFormFile file, string table_name, Guid table_id)
         {
             imageProfile.Validate(file);
 
@@ -61,9 +61,9 @@ namespace WebApp.Services
         /// <summary>
         /// Имя файла для сохранения на диске
         /// </summary>
-        private string GetFileName(IFormFile file, int table_id)
+        private string GetFileName(IFormFile file, Guid table_id)
         {
-            return $"{Path.GetFileNameWithoutExtension(file.FileName.Replace(" ", ""))}_{table_id:D5}.{Path.GetExtension(file.FileName)}";
+            return $"{Path.GetFileNameWithoutExtension(file.FileName.Replace(" ", ""))}_{table_id}.{Path.GetExtension(file.FileName)}";
         }
     }
 }

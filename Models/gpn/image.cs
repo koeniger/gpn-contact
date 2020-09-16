@@ -1,5 +1,7 @@
 ﻿
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Models.gpn
 {
@@ -9,12 +11,13 @@ namespace Models.gpn
         /// Код свойства Типа товара
         /// </summary>
         [Key]
-        public int image_id { get; set; }
+        [NotNull]
+        public Guid image_id { get; set; }
 
         /// <summary>
         /// Код из любой таблицы
         /// </summary>
-        public int any_table_id { get; set; }
+        public Guid any_table_id { get; set; }
 
         /// <summary>
         /// Нименование таблицы
@@ -29,6 +32,7 @@ namespace Models.gpn
         /// <summary>
         /// Флаг основного изображения (для галереи изображения)
         /// </summary>
+        [NotNull]
         public bool is_main { get; set; }
     }
 }

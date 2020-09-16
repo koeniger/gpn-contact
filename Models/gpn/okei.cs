@@ -1,6 +1,8 @@
 ﻿
 
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Models.gpn
 {
@@ -13,16 +15,19 @@ namespace Models.gpn
         /// Код единицы измерения
         /// </summary>
         [Key]
-        public int okei_id { get; set; }
+        [NotNull]
+        public Guid okei_id { get; set; }
 
         /// <summary>
         /// Код справочника ОКЕИ
         /// </summary>
+        [NotNull]
         public int okei_code { get; set; }
 
         /// <summary>
         /// Название единиц измерения
         /// </summary>
+        [NotNull]
         public string okei_name { get; set; }
 
         /// <summary>
@@ -44,5 +49,11 @@ namespace Models.gpn
         /// Междунаролное кодовое обозначение
         /// </summary>
         public string symbol_all_code { get; set; }
+
+        /// <summary>
+        /// используется в системе
+        /// </summary>
+        [NotNull]
+        public bool is_used { get; set; }
     }
 }

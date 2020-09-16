@@ -36,7 +36,7 @@ namespace DataBaseUpdater.ConsoleCommander
             try
             {
                 bool tryParse = false;
-                int id = 0;
+                Guid id = Guid.Empty;
 
                 while (!tryParse)
                 {
@@ -48,7 +48,7 @@ namespace DataBaseUpdater.ConsoleCommander
                     //Если пользователь ввел exit - то выход
                     if (produtTypeId == "exit") return;
 
-                    tryParse = Int32.TryParse(produtTypeId, out id);
+                    tryParse = Guid.TryParse(produtTypeId, out id);
                 }
 
                 var produtType = context.fdc_products_types.FirstOrDefault(p => p.product_type_id == id);
@@ -94,7 +94,7 @@ namespace DataBaseUpdater.ConsoleCommander
             try
             {
                 bool tryParse = false;
-                int id = 0;
+                Guid id = Guid.Empty;
 
                 //получение id продукта
                 while (!tryParse)
@@ -107,7 +107,7 @@ namespace DataBaseUpdater.ConsoleCommander
                     //Если пользователь ввел exit - то выход
                     if (produtTypeId == "exit") return;
 
-                    tryParse = Int32.TryParse(produtTypeId, out id);
+                    tryParse = Guid.TryParse(produtTypeId, out id);
                 }
 
                 //получение обхекта по id
@@ -504,7 +504,7 @@ namespace DataBaseUpdater.ConsoleCommander
                 {
                     new product_property()
                     {
-                        product_property_id = 10,
+                        //product_property_id = null,
                         property_name = "Антисептики",
                         product_property_type_id = chemPropType.product_property_type_id,
                         product_property_type = chemPropType,
@@ -515,7 +515,7 @@ namespace DataBaseUpdater.ConsoleCommander
                     },
                     new product_property()
                     {
-                        product_property_id = 11,
+                        //product_property_id = 11,
                         property_name = "для Windows",
                         product_property_type_id = softPropType.product_property_type_id,
                         //product_property_type = softPropType,
@@ -526,7 +526,7 @@ namespace DataBaseUpdater.ConsoleCommander
                     },
                     new product_property()
                     {
-                        product_property_id = 12,
+                        product_property_id = Guid.NewGuid(),
                         property_name = "Весовое оборудование",
                         product_property_type_id = equipPropType.product_property_type_id,
                         //product_property_type = equipPropType,
@@ -575,7 +575,7 @@ namespace DataBaseUpdater.ConsoleCommander
                 {
                     new product()
                     {
-                        product_id = 0,
+                        product_id = Guid.Empty,
                         product_name = "Чистота",
                         description_short = "Антисептик",
                         description_full = "Антисептик \"Чистота\"",
@@ -592,7 +592,7 @@ namespace DataBaseUpdater.ConsoleCommander
                     },
                     new product()
                     {
-                        product_id = 0,
+                        product_id = Guid.Empty,
                         product_name = "Asteros.EDU",
                         description_short = "Asteros.EDU",
                         description_full = "Программное обеспечение для Windows \"Asteros.EDU\"",
@@ -609,7 +609,7 @@ namespace DataBaseUpdater.ConsoleCommander
                     },
                     new product()
                     {
-                        product_id = 0,
+                        product_id = Guid.Empty,
                         product_name = "Умные весы",
                         description_short = "Весы",
                         description_full = "Умные весы",

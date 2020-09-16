@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace Models.secr
@@ -10,11 +12,13 @@ namespace Models.secr
         /// Код роли
         /// </summary>
         [Key]
-        public int role_id { get; set; }
+        [NotNull]
+        public Guid role_id { get; set; }
 
         /// <summary>
         /// Наименование роли
         /// </summary>
+        [NotNull]
         public string role_name { get; set; }
 
         /// <summary>

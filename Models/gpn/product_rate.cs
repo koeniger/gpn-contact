@@ -3,6 +3,7 @@ using Models.secr;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Models.gpn
 {
@@ -15,14 +16,16 @@ namespace Models.gpn
         /// Код рейтинга
         /// </summary>
         [Key]
-        public int product_rate_id { get; set; }
+        [NotNull]
+        public Guid product_rate_id { get; set; }
 
 #region CONSTRAINT
         /// <summary>
         /// Код продукта
         /// </summary>
         [ForeignKey("product")]
-        public int? product_id { get; set; }
+        [NotNull]
+        public Guid product_id { get; set; }
         /// <summary>
         /// Поставщика
         /// </summary>

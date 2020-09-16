@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace Models.gpn
@@ -16,11 +17,13 @@ namespace Models.gpn
         /// Код продукции
         /// </summary>
         [Key]
-        public int product_id { get; set; }
+        [NotNull]
+        public Guid product_id { get; set; }
 
         /// <summary>
         /// Наимменование продукции
         /// </summary>
+        [NotNull]
         public string product_name { get; set; }
 
         /// <summary>
@@ -36,6 +39,7 @@ namespace Models.gpn
         /// <summary>
         /// Цена
         /// </summary>
+        [NotNull]
         public decimal price { get; set; }
 
         /// <summary>
@@ -47,6 +51,7 @@ namespace Models.gpn
         /// <summary>
         /// Статус продукции: Действующий/Архивный
         /// </summary>
+        [NotNull]
         public bool is_archive { get; set; }
 
         /// <summary>
@@ -64,7 +69,7 @@ namespace Models.gpn
         /// Код раздела справочника продукции
         /// </summary>
         [ForeignKey("product_directory")]
-        public int? product_directory_id { get; set; }
+        public Guid product_directory_id { get; set; }
         /// <summary>
         /// Раздел
         /// </summary>
@@ -74,7 +79,7 @@ namespace Models.gpn
         /// Код поставщика
         /// </summary>
         [ForeignKey("contractor")]
-        public int? contractor_id { get; set; }
+        public Guid contractor_id { get; set; }
         /// <summary>
         /// Поставщика
         /// </summary>
@@ -84,7 +89,7 @@ namespace Models.gpn
         /// Код типа продукта
         /// </summary>
         [ForeignKey("product_type")]
-        public int? product_type_id { get; set; }
+        public Guid product_type_id { get; set; }
 
         /// <summary>
         /// Тип продукции

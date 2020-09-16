@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace Models.gpn
@@ -14,16 +15,19 @@ namespace Models.gpn
         /// Код свойства Типа товара
         /// </summary>
         [Key]
-        public int product_type_id { get; set; }
+        [NotNull]
+        public Guid product_type_id { get; set; }
 
         /// <summary>
         /// Наимменование типа продукции
         /// </summary>
+        [NotNull]
         public string product_type_name { get; set; }
 
         /// <summary>
         /// Статус продукции: Действующий/Архивный
         /// </summary>
+        [NotNull]
         public bool is_archive { get; set; }
 
         /// <summary>

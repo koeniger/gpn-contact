@@ -28,6 +28,6 @@ namespace Contact.Dto.Search
         /// <summary>
         /// Ид директории в которой ищем (опционально)
         /// </summary>
-        public int? DirectoryId { get; set; }
+        public Guid? DirectoryId { get; set; }
     }
 }

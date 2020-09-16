@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models.gpn;
+using System;
 using System.Threading.Tasks;
 using WebApp.Models;
 
@@ -26,7 +27,7 @@ namespace Contact.Controllers
         }
 
         [HttpGet("getByParent")]
-        public async Task<ActionResult> GetDirectoryByParent(int? parentId)
+        public async Task<ActionResult> GetDirectoryByParent(Guid? parentId)
         {
             var res = await _directoryOrchestrator.GetDirectoriesByParent(parentId);
             return Ok(res);
@@ -51,11 +52,11 @@ namespace Contact.Controllers
         /// Раздел
         /// </summary>
         [HttpGet("{id}")]
-        public async Task<ActionResult> Get(int? id)
+        public async Task<ActionResult> Get(Guid? id)
         {
             if (id != null)
             {
-                var result = await _orchestrator.GetDirectory((int)id);
+                var result = await _orchestrator.GetDirectory((Guid)id);
 
                 if (result != null) return Ok(result);
 
@@ -103,7 +104,7 @@ namespace Contact.Controllers
         /// PUT api/DirectoryController/{id}
         /// </summary>
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, product_directory directory)
+        public async Task<ActionResult> Put(Guid id, product_directory directory)
         {
             if (ModelState.IsValid)
             {
@@ -133,7 +134,7 @@ namespace Contact.Controllers
         /// </summary>
         private async Task<string> ConstraintsTest(product_directory directory)
         {
-            if (directory.parent_id == 0)
+            if (directory.parent_id == null)
             {
                 directory.parent_id = null;
                 directory.parent = null;
@@ -154,7 +155,7 @@ namespace Contact.Controllers
         /// DELETE api/DirectoryController/{id}
         /// </summary>
         [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteAsync(int id)
+        public async Task<ActionResult> DeleteAsync(Guid id)
         {
             var result = await _orchestrator.GetDirectory(id);
 

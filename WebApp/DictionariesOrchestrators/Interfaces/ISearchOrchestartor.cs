@@ -15,7 +15,7 @@ namespace Contact.Orchestrators.Interfaces
         /// </summary>
         /// <param name="directoryId">ид директории</param>
         /// <returns></returns>
-        Task<DirectoryResultGroupDto[]> SearchGroupsByDirectory(int? directoryId);
+        Task<DirectoryResultGroupDto[]> SearchGroupsByDirectory(Guid? directoryId);
 
         /// <summary>
         /// Возвращает результат поиска продуктов (материалов и оборудования)

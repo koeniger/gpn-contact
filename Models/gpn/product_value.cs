@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using System.Text.Json.Serialization;
 
@@ -16,7 +17,8 @@ namespace Models.gpn
         /// Код значения свойства
         /// </summary>
         [Key]
-        public int product_value_id { get; set; }
+        [NotNull]
+        public Guid product_value_id { get; set; }
 
         /// <summary>
         /// Значения свойства минимальное
@@ -34,16 +36,20 @@ namespace Models.gpn
         /// Код продукции
         /// </summary>
         [ForeignKey("product")]
-        public int product_id { get; set; }
+        [NotNull]
+        public Guid product_id { get; set; }
 
+        [NotNull]
         public product product { get; set; }
 
         /// <summary>
         /// Код единицы измерения
         /// </summary>
         [ForeignKey("product_property")]
-        public int product_property_id { get; set; }
+        [NotNull]
+        public Guid product_property_id { get; set; }
 
+        [NotNull]
         public product_property product_property { get; set; }
 
         #endregion

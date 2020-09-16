@@ -1,5 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Models.gpn
 {
@@ -13,11 +15,13 @@ namespace Models.gpn
         /// Код свойства продукции
         /// </summary>
         [Key]
-        public int product_property_id { get; set; }
+        [NotNull]
+        public Guid product_property_id { get; set; }
 
         /// <summary>
         /// Наименование
         /// </summary>
+        [NotNull]
         public string property_name { get; set; }
 
 
@@ -26,15 +30,17 @@ namespace Models.gpn
         /// Код продукции
         /// </summary>
         [ForeignKey("product_type")]
-        public int product_type_id { get; set; }
+        [NotNull]
+        public Guid product_type_id { get; set; }
 
+        [NotNull]
         public product_type product_type { get; set; }
 
         /// <summary>
         /// Код типа характеристики
         /// </summary>
         [ForeignKey("product_property_type")]
-        public string product_property_type_id { get; set; }
+        public Guid product_property_type_id { get; set; }
 
         public product_property_type product_property_type { get; set; }
 
@@ -42,7 +48,7 @@ namespace Models.gpn
         /// Код единицы измерения
         /// </summary>
         [ForeignKey("okei")]
-        public int okei_id { get; set; }
+        public Guid okei_id { get; set; }
 
         public okei okei { get; set; }
 

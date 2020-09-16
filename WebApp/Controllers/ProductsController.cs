@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -39,7 +40,7 @@ namespace WebApp.Controllers
         /// Формируется справочник по Типу продукции
         /// </summary>
         [HttpGet("product_type")]
-        public async Task<ActionResult<IEnumerable<product>>> Get(int? product_type = null)
+        public async Task<ActionResult<IEnumerable<product>>> Get(Guid? product_type = null)
         {
             if (product_type != null)
             {
@@ -58,7 +59,7 @@ namespace WebApp.Controllers
         /// Формируется справочник по разделам продукции
         /// </summary>
         [HttpGet("product_directory/{id}")]
-        public async Task<ActionResult<IEnumerable<product>>> GetProductsDirectory(int id)
+        public async Task<ActionResult<IEnumerable<product>>> GetProductsDirectory(Guid id)
         {
             var result = await _orchestrator.GetProductsDirectory(id);
             if (result != null && result.Count() > 0) return Ok(result);
@@ -70,7 +71,7 @@ namespace WebApp.Controllers
         /// Формируется справочник по производителям
         /// </summary>
         [HttpGet("contractor/{id}")]
-        public async Task<ActionResult<IEnumerable<product>>> GetProductsContractor(int id)
+        public async Task<ActionResult<IEnumerable<product>>> GetProductsContractor(Guid id)
         {
             var result = await _orchestrator.GetProductsContractor(id);
             if (result != null && result.Count() > 0) return Ok(result);
@@ -84,7 +85,7 @@ namespace WebApp.Controllers
         /// <param name="productType"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public async Task<ActionResult> Get(int id)
+        public async Task<ActionResult> Get(Guid id)
         {
             var result = await _orchestrator.GetProduct(id);
 
@@ -179,7 +180,7 @@ namespace WebApp.Controllers
         /// Изменение объекта в БД
         /// </summary>
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, product product)
+        public async Task<ActionResult> Put(Guid id, product product)
         {
             if (ModelState.IsValid)
             {
@@ -225,7 +226,7 @@ namespace WebApp.Controllers
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(Guid id)
         {
             var result = await _orchestrator.GetProduct(id);
 

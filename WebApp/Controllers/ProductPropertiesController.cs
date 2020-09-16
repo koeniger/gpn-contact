@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -28,11 +29,11 @@ namespace WebApp.Controllers
         #region GET
          // GET api/<ProductPropertiesController>/5
         [HttpGet("id")]
-        public async Task<ActionResult<product_property>> Get(int? id = null)
+        public async Task<ActionResult<product_property>> Get(Guid? id = null)
         {
             if (id != null)
             {
-                var result = await _orchestrator.GetProductsProperties((int)id);
+                var result = await _orchestrator.GetProductsProperties((Guid)id);
 
                 if (result != null) return Ok(result);
             }
@@ -101,7 +102,7 @@ namespace WebApp.Controllers
         #region PUT
         // PUT api/<ProductPropertiesController>/5
         [HttpPut("{id}")]
-        public async Task<ActionResult> Put(int id, product_property productProperty)
+        public async Task<ActionResult> Put(Guid id, product_property productProperty)
         {
             if (ModelState.IsValid)
             {
@@ -163,7 +164,7 @@ namespace WebApp.Controllers
         #region Delete
         // DELETE api/<ProductPropertiesController>/5
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id)
+        public async Task<ActionResult> Delete(Guid id)
         {
             var result = await _orchestrator.GetProductsProperties(id);
 

@@ -32,7 +32,7 @@ namespace WebApp.Models
         /// <summary>
         /// Получает объект Product из бд
         /// </summary>
-        public async Task<product> GetProduct(int id) => await _context.fdc_products.Include(u => u.product_type).FirstOrDefaultAsync(i => i.product_id == id);
+        public async Task<product> GetProduct(Guid id) => await _context.fdc_products.Include(u => u.product_type).FirstOrDefaultAsync(i => i.product_id == id);
 
         /// <summary>
         /// Поиск строки в Products по имени, описанию
@@ -46,7 +46,7 @@ namespace WebApp.Models
         /// <summary>
         /// Список продуктов по типу продуктов (product_type)
         /// </summary>
-        public async Task<IEnumerable<product>> GetProductsProductsTypes(int? product_type) => await _context.fdc_products.Where(t => t.product_type_id == product_type).Include(d => d.product_directory).ThenInclude(p => p.parent).Include(c => c.contractor).Include(t => t.product_type).ToListAsync();
+        public async Task<IEnumerable<product>> GetProductsProductsTypes(Guid? product_type) => await _context.fdc_products.Where(t => t.product_type_id == product_type).Include(d => d.product_directory).ThenInclude(p => p.parent).Include(c => c.contractor).Include(t => t.product_type).ToListAsync();
 
         /// <summary>
         /// Все продукты
@@ -57,13 +57,13 @@ namespace WebApp.Models
         /// <summary>
         /// Список продуктов по всему разделу (product_directory)
         /// </summary>
-        public async Task<IEnumerable<product>> GetProductsDirectory(int id) => await _context.fdc_products.Where(t => t.product_directory_id == id).Include(d => d.product_directory).ThenInclude(p => p.parent).Include(c => c.contractor).Include(t => t.product_type).ToListAsync();
+        public async Task<IEnumerable<product>> GetProductsDirectory(Guid id) => await _context.fdc_products.Where(t => t.product_directory_id == id).Include(d => d.product_directory).ThenInclude(p => p.parent).Include(c => c.contractor).Include(t => t.product_type).ToListAsync();
 
 
         /// <summary>
         /// Список продуктов по производителю (contractor)
         /// </summary>
-        public async Task<IEnumerable<product>> GetProductsContractor(int id) => await _context.fdc_products.Where(t => t.contractor_id == id).Include(d => d.product_directory).ThenInclude(p => p.parent).Include(c => c.contractor).Include(t => t.product_type).ToListAsync();
+        public async Task<IEnumerable<product>> GetProductsContractor(Guid id) => await _context.fdc_products.Where(t => t.contractor_id == id).Include(d => d.product_directory).ThenInclude(p => p.parent).Include(c => c.contractor).Include(t => t.product_type).ToListAsync();
 
 
         public async Task<EntityEntry<product>> Add(product new_product) => await _context.fdc_products.AddAsync(new_product);
@@ -78,12 +78,12 @@ namespace WebApp.Models
         /// <summary>
         /// Получает объект Product из бд
         /// </summary>
-        public async Task<product_value> GetProductValue(int id) => await _context.fdc_products_values.Include(u => u.product).Include(u => u.product_property).FirstOrDefaultAsync(i => i.product_value_id == id);
+        public async Task<product_value> GetProductValue(Guid id) => await _context.fdc_products_values.Include(u => u.product).Include(u => u.product_property).FirstOrDefaultAsync(i => i.product_value_id == id);
 
 
-        public async Task<IEnumerable<product_value>> GetProductsValuesByProduct(int id) => await _context.fdc_products_values.Where(t => t.product_id == id).Include(d => d.product).Include(c => c.product_property).ToListAsync();
+        public async Task<IEnumerable<product_value>> GetProductsValuesByProduct(Guid id) => await _context.fdc_products_values.Where(t => t.product_id == id).Include(d => d.product).Include(c => c.product_property).ToListAsync();
 
-        public async Task<IEnumerable<product_value>> GetProductsValuesByProperty(int id) => await _context.fdc_products_values.Where(t => t.product_property_id == id).Include(d => d.product).ToListAsync();
+        public async Task<IEnumerable<product_value>> GetProductsValuesByProperty(Guid id) => await _context.fdc_products_values.Where(t => t.product_property_id == id).Include(d => d.product).ToListAsync();
 
         public async Task<IEnumerable<product_value>> GetAllProductsValues() => await _context.fdc_products_values.Include(p => p.product).Include(u => u.product_property).ToListAsync();
 
@@ -97,7 +97,7 @@ namespace WebApp.Models
         #endregion
 
         #region ProductsProperties methods
-        public async Task<product_property> GetProductsProperties(int id) => await _context.fdc_products_properties.FirstOrDefaultAsync(i => i.product_property_id == id);
+        public async Task<product_property> GetProductsProperties(Guid id) => await _context.fdc_products_properties.FirstOrDefaultAsync(i => i.product_property_id == id);
 
         public async Task<IEnumerable<product_property>> GetAllProductsProperties() => await _context.fdc_products_properties.ToListAsync();
 
@@ -116,7 +116,7 @@ namespace WebApp.Models
         /// <summary>
         /// Получает объект ProductType из бд
         /// </summary>
-        public async Task<product_type> GetProductType(int? id) => await _context.fdc_products_types.FirstOrDefaultAsync(i => i.product_type_id == id);
+        public async Task<product_type> GetProductType(Guid? id) => await _context.fdc_products_types.FirstOrDefaultAsync(i => i.product_type_id == id);
 
         public async Task<IEnumerable<product_type>> GetAllProductType() => await _context.fdc_products_types.ToListAsync();
         /// <summary>
@@ -137,7 +137,7 @@ namespace WebApp.Models
         /// <summary>
         /// Получает объект ProductType из бд
         /// </summary>
-        public async Task<contractor> GetContractor(int? id) => await _context.fdc_contractors.FirstOrDefaultAsync(i => i.contractor_id == id);
+        public async Task<contractor> GetContractor(Guid? id) => await _context.fdc_contractors.FirstOrDefaultAsync(i => i.contractor_id == id);
 
         public async Task<IEnumerable<contractor>>  GetAllContractor() => await _context.fdc_contractors.ToListAsync();
 
@@ -152,7 +152,7 @@ namespace WebApp.Models
         /// <summary>
         /// Получает объект ProductType из бд
         /// </summary>
-        public async Task<product_directory> GetDirectory(int? id) => await _context.fdc_product_directories.FirstOrDefaultAsync(i => i.product_directory_id == id);
+        public async Task<product_directory> GetDirectory(Guid? id) => await _context.fdc_product_directories.FirstOrDefaultAsync(i => i.product_directory_id == id);
 
         public async Task<IEnumerable<product_directory>> GetDirectories() => await _context.fdc_product_directories.ToListAsync();
 
@@ -169,7 +169,7 @@ namespace WebApp.Models
         /// <summary>
         /// Получает объект Product из бд
         /// </summary>
-        public async Task<okei> GetOKEI(int id) => await _context.fdc_okei.FirstOrDefaultAsync(i => i.okei_id == id);
+        public async Task<okei> GetOKEI(Guid id) => await _context.fdc_okei.FirstOrDefaultAsync(i => i.okei_id == id);
 
         public async Task<IEnumerable<okei>> GetAllOKEI() => await _context.fdc_okei.ToListAsync();
         public async Task<IEnumerable<okei>> SearchOKEI(string search) => await _context.fdc_okei.Where(
@@ -185,11 +185,11 @@ namespace WebApp.Models
         #endregion
 
         #region Image methods
-        public async Task<image> GetImage(int id) => await _context.fdc_images.FirstOrDefaultAsync(i => i.image_id == id);
+        public async Task<image> GetImage(Guid id) => await _context.fdc_images.FirstOrDefaultAsync(i => i.image_id == id);
 
         public async Task<IEnumerable<image>> GetAllImages() => await _context.fdc_images.ToListAsync();
 
-        public async Task<IEnumerable<image>> GetImages(string table, int id) => await _context.fdc_images.Where(n => n.any_table_name == table && n.any_table_id == id).ToListAsync();
+        public async Task<IEnumerable<image>> GetImages(string table, Guid id) => await _context.fdc_images.Where(n => n.any_table_name == table && n.any_table_id == id).ToListAsync();
 
         public async Task<EntityEntry<image>> Add(image new_image) => await _context.fdc_images.AddAsync(new_image);
 
@@ -207,7 +207,7 @@ namespace WebApp.Models
 
         public async Task<IEnumerable<user>> GetUsers() => await _context.fdc_users.Include(u => u.role).Include(c => c.contractor).ToListAsync();
 
-        public async Task<user> GetUser(int id) => await _context.fdc_users.Include(u => u.role).Include(c => c.contractor).FirstOrDefaultAsync(x => x.user_id == id);
+        public async Task<user> GetUser(Guid id) => await _context.fdc_users.Include(u => u.role).Include(c => c.contractor).FirstOrDefaultAsync(x => x.user_id == id);
 
         public async Task<user> GetUserByEmail(string email) => await _context.fdc_users.Include(u => u.role).Include(c => c.contractor).FirstOrDefaultAsync(x => x.email.ToLower() == email.ToLower());
         public async Task<EntityEntry<user>> Add(user new_user) => await _context.fdc_users.AddAsync(new_user);

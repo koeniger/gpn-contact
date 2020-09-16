@@ -17,7 +17,7 @@ namespace Contact.Dto
                 .ForMember(x => x.DescriptionShort, x => x.MapFrom(t => t.description_short))
                 .ForMember(x => x.Price, x => x.MapFrom(t => t.price))
                 .ForMember(x => x.ReviewCount, x => x.MapFrom(t => t.Responses.Count))
-                .ForMember(x => x.Rating, x => x.MapFrom(t => (float)t.Rates.Average(r => r.product_rate_id)))
+                .ForMember(x => x.Rating, x => x.MapFrom(t => (float)t.Rates.Average(r => r.rate)))
                 .ForMember(x => x.SupplyCount, x => x.Ignore());
 
             CreateMap<product_directory, DirectoryLazyDto>(MemberList.Destination)

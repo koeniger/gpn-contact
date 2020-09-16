@@ -1,7 +1,9 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
 namespace Models.gpn
@@ -15,11 +17,13 @@ namespace Models.gpn
         /// Код родительского раздела
         /// </summary>
         [Key]
-        public int product_directory_id { get; set; }
+        [NotNull]
+        public Guid product_directory_id { get; set; }
 
         /// <summary>
         /// Нименование раздела
         /// </summary>
+        [NotNull]
         public string product_directory_name { get; set; }
 
         /// <summary>
@@ -32,7 +36,7 @@ namespace Models.gpn
         /// Код родительского раздела
         /// </summary>
         [ForeignKey("parent")]
-        public int? parent_id { get; set; }
+        public Guid? parent_id { get; set; }
 
         /// <summary>
         /// Родительского раздел

@@ -1,6 +1,7 @@
 ﻿using Contact.Dto.Search;
 using Contact.Orchestrators.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace Contact.Controllers
@@ -23,7 +24,7 @@ namespace Contact.Controllers
         }
 
         [HttpPost("searchGroupsByDirectory")]
-        public async Task<ActionResult> SearchGroupsByDirectory(int? directoryId)
+        public async Task<ActionResult> SearchGroupsByDirectory(Guid? directoryId)
         {
             var res = await _searchOrchestrator.SearchGroupsByDirectory(directoryId);
             return Ok(res);

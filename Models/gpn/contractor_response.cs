@@ -1,9 +1,9 @@
 ﻿
 using Models.Abstracts;
-using Models.secr;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Models.gpn
 {
@@ -16,24 +16,27 @@ namespace Models.gpn
         /// Код отзыва и предложения о контрагенте
         /// </summary>
         [Key]
-        public int contractor_response_id { get; set; } 
+        [NotNull]
+        public Guid contractor_response_id { get; set; } 
 
         #region CONSTRAINT
         /// <summary>
         /// Код поставщика
         /// </summary>
         [ForeignKey("contractor")]
-        public int? contractor_id { get; set; }
+        [NotNull]
+        public Guid contractor_id { get; set; }
         /// <summary>
         /// Поставщика
         /// </summary>
+        [NotNull]
         public contractor contractor { get; set; }
 
         /// <summary>
         /// Код родительского отзыва
         /// </summary>
         [ForeignKey("parent")]
-        public int? parent_id { get; set; }
+        public Guid? parent_id { get; set; }
 
         /// <summary>
         /// Родительский отзыв
